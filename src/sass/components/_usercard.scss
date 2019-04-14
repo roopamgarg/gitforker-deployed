@@ -1,0 +1,60 @@
+.user-card{
+
+    padding: 1.6rem 1rem;
+    background: rgba(#fff,.95);
+    margin: 0rem;
+    box-shadow: .5rem 1rem 2rem rgba($color-black,.2);
+    transition: all .2s;
+    &:hover{
+        //transform: scaleY(1.1);
+        padding: 2.6rem 0;
+        background: rgba($white,1);
+    box-shadow: .5rem 1rem 2rem rgba($color-black,.2);
+    position: relative;
+    z-index: 99;
+
+    }
+
+    &__image{
+        height: 100%;
+        
+        img{
+            height: 5rem;
+            width: 5rem;
+            padding: .5rem;
+            box-shadow: .5rem .5rem 1rem rgba($color-black,.2);
+            border-radius: 50%;
+
+           
+        }
+    }
+    &__details{
+        padding-left:1rem; 
+        h3{
+            font-size: 1.6rem;
+            padding: .5rem 0;
+            font-weight: 100;
+            color: $color-pink;
+        }
+        p{
+            
+        }
+    }
+    &__online{
+        width: 1.2rem;
+        height: 1.2rem;
+        margin:.5rem;
+        border-radius: 50%;
+        background: $green;
+    }
+    &__msg{
+        width: 1.2rem;
+        height: 1.2rem;
+        font-size: 1rem;
+        color: $white;
+        border-radius: 50%;
+       
+        background: rgba($red,.9);
+
+    }
+}

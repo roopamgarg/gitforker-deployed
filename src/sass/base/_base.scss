@@ -1,0 +1,90 @@
+*,
+*::after,
+*::before {
+    margin: 0;
+    padding: 0;
+    
+    box-sizing: border-box;
+}
+
+html {
+    // This defines what 1rem is
+    font-size: 62.5%; //1 rem = 10px; 10px/16px = 62.5%
+    
+    @include respond(tab-land) { // width < 1200?
+        font-size: 56.25%; //1 rem = 9px, 9/16 
+    }
+
+    @include respond(tab-port) { // width < 900?
+        font-size: 50%; //1 rem = 8px, 8/16 = 50%
+    }
+    
+    @include respond(big-desktop) {
+        font-size: 75%; //1rem = 12, 12/16
+    }
+   
+}
+
+body {
+    box-sizing: border-box;
+    padding: 0rem;
+    overflow-x: hidden;
+    width: 100vw;
+    
+}
+a{
+    text-decoration: none;
+    
+}
+::selection {
+    background-color: $color-white;
+    color: $color-white;
+
+}
+a{
+    text-align: right;
+    color: inherit;
+}
+
+.error{
+  
+    text-align: center;
+    color:rgba($red,.6);
+}
+
+.text-logo{
+    height: 2rem;
+}
+
+        /* width */
+        ::-webkit-scrollbar {
+            width: 5px;
+          }
+          
+          /* Track */
+          ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+          }
+          
+          /* Handle */
+          ::-webkit-scrollbar-thumb {
+              
+            background: linear-gradient(to bottom,$color-pink,$color-blue); 
+          }
+          
+          /* Handle on hover */
+          ::-webkit-scrollbar-thumb:hover {
+            //background: linear-gradient(to bottom,rgba($color-pink),rgba($color-blu));
+          }
+
+        .loader{
+            background: linear-gradient($color-pink,$color-blue);
+            -webkit-background-clip:text;
+            font-weight: 900;
+            color: transparent;
+            display: block;
+            font-size: 4rem;
+            overflow: hidden;
+            animation: rubberBand 2s infinite;
+            
+        }

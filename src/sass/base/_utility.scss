@@ -1,0 +1,91 @@
+
+.u-h-100{
+    height: 100%;
+}
+.u-small-fonts{
+    font-size: 1rem;
+}
+
+.u-text-center{
+    text-align: center;
+}
+.u-text-left{
+    text-align: left;
+}
+
+.u-text-white{
+    color:$white
+}
+.u-text-black{
+    color: $color-black;
+}
+.u-margin-x-sm{
+    margin: 0 1rem;
+}
+
+.u-margin-y-sm{
+    margin: 1rem 0;
+}
+
+.u-margin-y-md{
+    margin: 2rem 0;
+}
+
+.u-margin-y-lg{
+    margin: 4rem 0;
+}
+.u-padding-sm{
+   padding: 2rem;
+}
+.u-display-block{
+    display: block;
+}
+
+
+.u-display-flex{
+    display: flex;
+
+    &.u-justify-content-center{
+        justify-content: center;
+    }
+    &.u-justify-content-start{
+        justify-content: flex-start;
+    }
+    &.u-justify-content-end{
+        justify-content: flex-end;
+    }
+    &.u-justify-content-space-evenly{
+        justify-content: space-evenly;
+    }
+    &.u-justify-content-space-between{
+        justify-content: space-between;
+    }
+    &.u-justify-content-space-around{
+        justify-content: space-around;
+    }
+    &.u-align-items-center{
+       align-items: center;
+    }
+    &.u-align-items-start{
+        align-items: flex-start;
+    }
+    &.u-align-items-end{
+       align-items:flex-end;
+    }
+    &.u-align-items-stretch{
+        align-items: stretch;
+    }
+    &.u-align-items-baseline{
+        align-items: baseline;
+    }
+    &.u-align-self-end{
+        align-self:flex-end;
+    }
+    &.u-flex-column{
+        flex-direction: column;
+    }
+    & > .flex-fill{
+        flex:1
+    }
+   
+}

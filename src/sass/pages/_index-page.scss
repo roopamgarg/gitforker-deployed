@@ -1,0 +1,79 @@
+.index-page{
+    height: 100vh;
+    overflow: hidden;
+    &__left{
+    transition: "all .2s";
+    width: 55%;
+        .Tilt{
+            width: 100%;
+            height: 100%;
+        
+        }
+    @include respond(tab-port){
+        display: none;
+    }
+    }
+    &__right{
+        padding:7rem 0;
+        @include respond(tab-port){
+            padding: 4rem;
+            background: linear-gradient(rgba(#f7f7f7,.8),rgba(#f7f7f7,1)), url('./img/homePageHero.webp') center center ;
+            background-size: cover;
+        }
+        
+    }
+    &__content{
+        padding: 0 5rem 0 0;
+        @include respond(tab-port){
+            padding: 0 2rem 0 0;
+        }
+    }
+    &__header{
+        text-align: right;
+        font-family: "Georgia";
+        margin: 1rem 0;
+        
+
+        font-size: 3.5rem;
+        letter-spacing: .2rem;
+        font-weight: 100;
+        color: $color-pink;
+        text-shadow: 4px 5px 2rem rgba($color-black,.2); 
+        @include respond(tab-port){
+            font-size: 3rem;
+            
+        }
+    }
+    &__btn{
+        position: relative;
+        z-index: 100;
+        padding: 1.6rem;
+        width: 25vw;
+        margin: 2rem 0;
+        font-family: "Georgia";
+        border:none;
+        background: linear-gradient($color-pink,$color-blue);
+        color: $color-white;
+        font-size: 2rem;
+        border-radius: 5px;
+      
+        box-shadow:none;
+        transition: all .2s;
+        @include respond(tab-port){
+            width: 50vw;
+            font-size: 1.6rem;
+        }
+        &:hover{
+           transform: translateY(-.5rem);
+            box-shadow: 4px 5px 4rem rgba($color-black,.2);
+        }
+    }
+}
+
+
+.icon-container{
+    padding: 0 5rem 0 3rem ;
+    @include respond(tab-port){
+        padding: 0 1rem;
+    }
+}

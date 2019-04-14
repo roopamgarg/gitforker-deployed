@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "AACK,AAAD,UAAM,CAAA;EACF,MAAM,EAAE,KAAK;CAChB;;AACA,AAEG,YAFI,AAEH,MAAM,CAAA;EAEJ,MAAM,EAAC,IAEV;CAAC;;AAEJ,AAEG,WAFG,AAEF,MAAM,CAAA;EAEJ,MAAM,EAAC,IAEV;CAAC",
+    "sources": [
+        "drop.scss"
+    ],
+    "names": [],
+    "file": "drop.css"
+}

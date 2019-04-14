@@ -1,0 +1,64 @@
+
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="358" height="230" viewBox="0 0 258 230">
+  <defs>
+  
+   
+ 
+    <filter id="Ellipse_1" x="15" y="35" width="229" height="250" filterUnits="userSpaceOnUse">
+      <feOffset dx="20" dy="10" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="10" result="blur"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="Ellipse_3" x="100" y="-3" width="184" height="177" filterUnits="userSpaceOnUse">
+      <feOffset dx="20" dy="10" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="10" result="blur-2"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-2"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <clipPath id="clip-Artboard_2">
+      <rect width="258" height="230"/>
+    </clipPath>
+  </defs>
+  <g id="Artboard_2" data-name="Artboard – 2" clip-path="url(#clip-Artboard_2)">
+    <g transform="matrix(1, 0, 0, 1, 0, 0)" filter="url(#Ellipse_1)">
+      <ellipse id="Ellipse_1-2" className="drop__green" data-name="Ellipse 1" cx="84" cy="79" rx="84" ry="84"  transform="translate(25 55)" fill="rgba(0,255,76,0.27)"  opacity="0.65"/>
+   
+
+    
+    </g>
+    <g transform="matrix(1, 0, 0, 1, 0, 0)" filter="url(#Ellipse_3)">
+      <ellipse id="Ellipse_3-2" className="drop__pink" transition="all 1s" data-name="Ellipse 3" cx="50" cy="90" rx="62" ry="58.5" transform="translate(110 17)" fill="rgba(251,32,222,0.32)"/>
+       <animate 
+    xlink:href="#Ellipse_3-2"
+    attributeName="cy"
+    from="70"
+    to="90" 
+    
+    dur="2s"
+    begin="1s"
+    fill="remove" 
+    repeatCount="indefinite"
+    />
+  
+     <animate 
+    xlink:href="#Ellipse_3-2"
+    attributeName="cx"
+    from="70"
+    to="50" 
+
+    dur="2s"
+    begin="1s"
+    fill="remove" 
+    repeatCount="indefinite"
+    />
+    
+  
+    
+    
+    </g>
+  </g>
+</svg>

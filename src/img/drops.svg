@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="258" height="230" viewBox="0 0 258 230">
+  <defs>
+    <filter id="Ellipse_4" x="62" y="-5" width="215" height="220" filterUnits="userSpaceOnUse">
+      <feOffset dx="20" dy="10" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="10" result="blur"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="Ellipse_5" x="16" y="75" width="184" height="177" filterUnits="userSpaceOnUse">
+      <feOffset dx="20" dy="10" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="10" result="blur-2"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-2"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <clipPath id="clip-Artboard_2">
+      <rect width="258" height="230"/>
+    </clipPath>
+  </defs>
+  <g id="Artboard_2" data-name="Artboard – 2" clip-path="url(#clip-Artboard_2)">
+    <g transform="matrix(1, 0, 0, 1, 0, 0)" filter="url(#Ellipse_4)">
+      <ellipse id="Ellipse_4-2" data-name="Ellipse 4" cx="77.5" cy="80" rx="77.5" ry="80" transform="translate(72 15)" fill="rgba(0,255,76,0.27)" opacity="0.69"/>
+    </g>
+    <g transform="matrix(1, 0, 0, 1, 0, 0)" filter="url(#Ellipse_5)">
+      <ellipse id="Ellipse_5-2" data-name="Ellipse 5" cx="62" cy="58.5" rx="62" ry="58.5" transform="translate(26 95)" fill="rgba(251,32,222,0.32)"/>
+           <animate 
+    xlink:href="#Ellipse_5-2"
+    attributeName="cy"
+    from="62"
+    to="45" 
+    dur="2s"
+    begin="1s"
+    fill="remove" 
+    repeatCount="indefinite"
+    />
+  
+     <animate 
+    xlink:href="#Ellipse_5-2"
+    attributeName="cx"
+    from="58.5"
+    to="75" 
+    dur="2s"
+    begin="1s"
+    fill="remove" 
+    repeatCount="indefinite"
+    />
+    </g>
+  </g>
+</svg>

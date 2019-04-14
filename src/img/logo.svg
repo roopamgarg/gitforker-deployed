@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="573" height="379" viewBox="0 0 573 379">
+  <defs>
+    <linearGradient id="linear-gradient" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#ec20fb"/>
+      <stop offset="1" stop-color="#4c44ba"/>
+    </linearGradient>
+    <filter id="Path_3" x="-19.533" y="16.986" width="581.533" height="360.014" filterUnits="userSpaceOnUse">
+      <feOffset dx="10" dy="20" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="10" result="blur"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="GF" x="199" y="64" width="210" height="231" filterUnits="userSpaceOnUse">
+      <feOffset dx="40" dy="40" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="10" result="blur-2"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-2"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <clipPath id="clip-Artboard_3">
+      <rect width="573" height="379"/>
+    </clipPath>
+  </defs>
+  <g id="Artboard_3" data-name="Artboard – 3" clip-path="url(#clip-Artboard_3)">
+    <g transform="matrix(1, 0, 0, 1, 0, 0)" filter="url(#Path_3)">
+      <path id="Path_3-2" data-name="Path 3" d="M1112.756,1370.136c415.626-129.226,433.728,352.837,296.926,267.715S697.129,1499.363,1112.756,1370.136Z" transform="translate(-964 -1321)" fill="url(#linear-gradient)"/>
+    </g>
+    <g transform="matrix(1, 0, 0, 1, 0, 0)" filter="url(#GF)">
+      <text id="GF-2" data-name="GF" transform="translate(261 178)" fill="#fff" font-size="100" font-family="MVBoli, MV Boli"><tspan x="-61.67" y="0">GF</tspan></text>
+    </g>
+  </g>
+</svg>

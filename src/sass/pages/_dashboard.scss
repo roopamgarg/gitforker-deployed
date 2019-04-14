@@ -1,0 +1,71 @@
+.dashboard{
+    height: 100vh;
+    
+    &__left{
+        height: 100vh;
+        width: 35%;
+        background:url('./img/image-assets/bg-purple-pattern.svg') center center;
+        background-size: cover;
+        @include respond(tab-port){
+            width: 100%;
+        }
+    }
+    &__right{
+        width: 65%;
+        background:url('./img/image-assets/none-selected.svg') center center;
+        background-size: 100% 100%;
+        @include respond(tab-port){
+            width: 0%;
+        }
+    }
+    &__sidenav{
+        width: 30%;
+       ul{       
+            border-top:  1px  solid rgba($color-pink,.8);
+       }
+        //background-color: rgba(#eee,.9);
+        li{
+            padding: 2rem;
+            font-size: 1.6rem;
+            text-align: left;
+            width: 100%;
+            
+            border-bottom: 1px  solid rgba($color-pink,.8);
+        background: linear-gradient(90deg,$color-pink ,$color-blue 50%,transparent 50% );
+            background-size: 200% ;
+            
+            background-position: right;
+            transition: all .2s;
+            
+            cursor: pointer;
+            
+            &:hover{
+        //background: linear-gradient($color-pink,$color-blue);
+        background-position: left;
+                color:$color-white
+            }
+            
+        }
+        
+    }
+    &__header{
+        text-align: left;
+        padding: 1rem;
+        color:$color-pink;
+    }
+    &__list{
+        width: 70%;
+        padding: 1rem 1rem 0 1rem;
+        
+    }
+}
+
+.empty{
+    height: 40vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: $color-pink;
+    font-size: 1.6rem;
+    cursor: pointer;
+}

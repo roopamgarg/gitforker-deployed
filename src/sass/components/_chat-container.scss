@@ -1,0 +1,140 @@
+.chat-container{
+    height: 100vh;
+    background: $color-white;
+}
+
+.chat-header{
+    height: 12vh;
+    display: flex;
+    padding: 1rem 2rem;
+    justify-content: space-between;
+    align-items: center;
+    background: $white;
+    &__name{
+        flex:1;
+       color: $color-pink;
+       text-transform: capitalize;
+        text-align: left;
+        font-size:2rem;
+        padding: 0 2rem; 
+        p{
+            font-size: 1rem;
+        }
+    }
+
+    &__options{
+       
+
+        i{
+            color:$color-light-pink;
+            font-size: 1.6rem;
+            padding: 1rem 1rem;
+            margin: 0 .5rem;
+            border-radius: 50%;
+            background: $white;
+            box-shadow: .2rem .5rem 1rem rgba($color-black,.2);
+        }
+    }
+
+}
+
+.message-container{
+    height: 76vh;
+    background: rgba($color-light-pink,.1);
+    padding: 1rem;
+    text-align: left;
+   
+    overflow-y:scroll;
+    .markdown-body {
+		box-sizing: border-box;
+		min-width: 200px;
+		max-width: 980px;
+		margin: 0 auto;
+		
+	}
+    // code {
+    //     display: block;
+    //     overflow-x: auto;
+    //     padding: 0.5em;
+    //     color: #333;
+    //     background: #f8f8f8;
+    // }
+    // blockquote {
+    //     color: #666;
+    //     margin: 0;
+    //     padding-left: 3em;
+    //     border-left: 0.5em #eee solid;
+    //     display: block;
+    //     margin-block-start: 1em;
+    //     margin-block-end: 1em;
+    //     margin-inline-start: 40px;
+    //     margin-inline-end: 40px;
+    // }
+    // &.atbottom{
+    //     display: flex;
+    //     justify-content: flex-end;
+    //     flex-direction: column;
+    // }
+    &__message-content{
+        
+        background: $white; 
+        width: fit-content;
+        margin:1rem 0;
+        max-width: 50vw; 
+        padding: 1rem; 
+        color: white;
+        border-radius: .5rem;
+        font-size: 1.6rem;
+       
+    }
+    &__message-box{
+        display: flex;
+        flex-direction:column;
+        align-items: flex-start;
+    }
+    .right.message-container__message-box{
+        display: flex;
+        flex-direction:column;
+        align-self: flex-end;
+        align-items: flex-end;
+    }
+    .right &__message-content{
+        background: $white ; 
+    }
+    
+    &__time{
+        font-size: 1rem;
+        margin: 0 .5rem;
+    }
+
+    
+}
+
+.message-input{
+    height: 12vh;
+    width: 100%;
+    display: flex;
+    &__textarea{
+        display: block;
+        height: 100%;
+        border: none;
+        width: 90%;
+        outline: none;
+        padding: 1rem;
+    }
+    &__btn{
+        border: none;
+      
+        display: block;
+        height: 100%;
+        width: 12%;
+        // background: linear-gradient($color-pink,$color-blue);
+        background: linear-gradient($color-light-pink,$color-blue);
+        outline: none;
+        i{
+            color: $white;
+            font-size: 2rem;
+        }
+
+    }
+}

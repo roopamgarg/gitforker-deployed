@@ -1,0 +1,41 @@
+.non-registered-user{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+    background: rgba($color-white,.8);
+    padding: 4rem;
+    &__message{
+        font-weight: 900;
+        font-size: 4rem;
+        background: linear-gradient($color-pink,$color-blue);
+        -webkit-background-clip: text;
+        color: transparent;
+
+    }
+    &__invite-btn{
+        position: relative;
+        z-index: 100;
+        padding: 1.6rem;
+        width: 25vw;
+        margin: 2rem 0;
+        font-family: "Georgia";
+        border:none;
+        background: linear-gradient($color-pink,$color-blue);
+        color: $color-white;
+        font-size: 2rem;
+        border-radius: 5px;
+      
+        box-shadow:none;
+        transition: all .2s;
+        @include respond(tab-port){
+            width: 50vw;
+            font-size: 1.6rem;
+        }
+        &:hover{
+           transform: translateY(-.5rem);
+            box-shadow: 4px 5px 4rem rgba($color-pink,.2);
+        }
+    }
+}

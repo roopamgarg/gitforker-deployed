@@ -1,0 +1,35 @@
+.project-card{
+   
+    padding: 1rem 2.2rem;
+    margin:1rem 1rem 1rem 1rem;
+    box-shadow: .1rem .1rem 4rem rgba(#000,.2);
+    
+    
+    &__content{
+    text-align: left;
+    color:$white;
+    }
+    &__heading{
+        margin-top: 1rem;
+        font-size: 2rem;
+    }
+    &__language{
+        font-size: 1.4rem;
+        margin: 1rem 0;
+    }
+
+    &__points{
+        display: flex;
+        &__card{
+    background: #fff;
+    box-shadow: .1rem .1rem 4rem rgba(#000,.2);
+            padding: 1rem 2rem;
+            margin: 1rem .5rem;
+            &:first-child{
+                margin-left: 0;
+            }
+        }
+    }
+    
+
+}

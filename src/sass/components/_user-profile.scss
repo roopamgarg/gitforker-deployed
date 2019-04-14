@@ -1,0 +1,71 @@
+.user-profile{
+    height: 100vh;
+    background: url('./img/dashboard-user-bg.png') center center;
+    background-size: 100% 100%;
+   
+    &__project-cards__container{
+       
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        padding: 1rem;
+      
+
+    }
+    &__social{
+        padding: 5rem;
+    }
+    &__social__cards{
+        padding: 1rem 3rem;
+        background: linear-gradient($color-pink,$color-blue);
+        color: $white;
+        border-radius: 1rem;
+        font-size: 1.6rem;
+    }
+    &__details{
+        padding: 0 0 2rem 0; 
+        h2{
+            font-size: 2rem;
+            text-transform:uppercase;
+        }
+       p{
+            padding: 1rem;
+            font-size: 1.6rem;
+
+        }
+
+    }
+    &__left{
+        padding: 2rem;
+        width: 25%
+       // border-right: .1px solid $color-black;
+    }
+
+    &__right{
+        overflow: auto;
+    }
+    &__btns{
+        padding: 2rem 0;
+    }
+   
+
+}
+
+.btn{
+    
+    &__green{
+        background: linear-gradient(#05F34B,#3DBA62);
+        border:none;
+        width: 90%;
+        color: $color-white;
+        padding: .8rem;
+        margin:1rem 0;
+    }
+    &__purple{
+        background: linear-gradient($color-pink,$color-blue);
+        border:none;
+        width: 90%;
+        color: $color-white;
+        padding: .8rem;
+        margin:1rem 0;
+    }
+}
