@@ -18,12 +18,13 @@ export default (WrappedComponent) =>{
             
             if(!nextProps.data.loading && !nextProps.data.user){
                 this.props.history.push('/');
+                
             }
             return (nextProps.data.user)
         }
     render(){
-        
-        return (!this.props.data.loading)?
+        const { loading,user } = this.props.data 
+        return (!loading && user)?
         <WrappedComponent {...this.props}  />:
         <Loader/>
     }

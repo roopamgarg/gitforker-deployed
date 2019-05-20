@@ -25,8 +25,9 @@ query Search($username:String!){
 
     componentDidUpdate = (prevProps,prevState) => {
         const { socket,user,data,setPreviousMessages } = this.props;   
-      
-        if(!data.loading && data.search_one && data.search_one.isGitforkerUser && prevProps.data !== this.props.data){
+      console.log(this.props);
+      console.log(prevProps.data)
+        if(!data.loading && data.search_one && data.search_one.isGitforkerUser && (prevProps.data !== this.props.data || prevProps.reciever !== this.props.reciever)){
         
             socket.emit(CREATE_CHAT,user,data.search_one.login,setPreviousMessages);
 
@@ -35,10 +36,10 @@ query Search($username:String!){
   
     render(){
         const { socket,user,data,chat,messages } = this.props; 
-       
+       console.log(chat)
         if(data.loading){
             return <Loader/>
-        }
+        } 
         else if(!data.search_one){
             return <div>User Not EXIST</div> 
         }

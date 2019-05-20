@@ -1,4 +1,6 @@
+const fs = require('fs');
 let onlineUsers = [];
+const siofu = require("socketio-file-upload");
 const mongoose = require("mongoose");
 const models = require("./models");
 const allChats = mongoose.model("allChats");
@@ -15,24 +17,27 @@ const SocketManager = (socket)=>{
       const user = createUser({ username, socketId: socket.id });
       const userInfo = await User.findOne({ username: username });
       const chatHistory = await getAllPeviousChats(userInfo.chatsIdArray);
+      console.log("****************")
+      console.log(chatHistory)
       setUser(user, chatHistory);
     });
   
     socket.on(CREATE_CHAT, async (username, recievers, setPreviousMessages) => {
       if (!Array.isArray(recievers)) {
-        const users = await User.find({
+        const users = await User.find({//Fteching All the users that are part of chat
           $or: [{ username: username }, { username: recievers }]
         });
-        let currentUser = users.filter(user => (user.username = username));
-        currentUser = currentUser[0];
-  
-        const usersIdArray = users.map(user => user._id);
-        const usernamesArray = [username,recievers];
+       
+        let currentUser = users.filter(user => (user.username == username));
+        currentUser = currentUser[0];//Getting Current User who creates the chat
+        
+        const usersIdArray = users.map(user => user._id);//Creating User id array
+        const usernamesArray = [username,recievers];//Creating Usernames array
       
-        let chat = await allChats.findOne({ users: usersIdArray });
+        let chat = await allChats.findOne({ users: usersIdArray });//findig if the chatroom is already exist
         let newChat = {};
-  
-        if (!chat) {
+        
+        if (!chat) {//if chatroom is not already exist then we creating a new chatroom
         
   
           chat = await new allChats({
@@ -50,7 +55,6 @@ const SocketManager = (socket)=>{
             chatId: chat.id,
             chatName: "personal",
             messages: [],
-            typingUsers: [],
             users:usernamesArray
           };
         } else {
@@ -59,14 +63,15 @@ const SocketManager = (socket)=>{
             chatId: chat.id,
             chatName: "personal",
             messages: await getAllPreviousMessages(chat.messages),
-            typingUsers: [],
             users:usernamesArray
           };
         }catch(err){
           console.error(err)
         }
         }
-       
+        console.log("-----")
+        console.log(users);
+        
         setPreviousMessages(newChat)
         // addChat(createChat(newChat));
       }
@@ -92,7 +97,7 @@ const SocketManager = (socket)=>{
      
       messageBody.sender = senderName
         
-      console.log(recieverName,senderName);
+      console.log(messageBody);
       io.emit(`${MESSAGE_RECIEVED}-${recieverName}`,messageBody)
       io.emit(`${MESSAGE_SENT}-${senderName}`,messageBody)
       await newMessage.save();
@@ -100,10 +105,26 @@ const SocketManager = (socket)=>{
     })
 
     socket.on(SEND_TYPING,(sender,reciever,chatId)=>{
-      console.log(chatId)
-      console.log("hello")
+      
       socket.broadcast.emit(`${TYPING}-${chatId}`,sender)
     })
+
+    
+let files = {};
+let struct = { 
+        name: null, 
+        type: null, 
+        size: 0, 
+        data: [], 
+        slice: 0, 
+    };
+
+    socket.on('slice upload',function(socket){
+      console.log("called")
+      var uploader = new siofu();
+      uploader.dir = "/path/to/save/uploads";
+      uploader.listen(socket);
+  });
   };
 
 
@@ -145,8 +166,6 @@ const SocketManager = (socket)=>{
      
       const users =  await Promise.all(chat.users.map( userId => getUserById(userId)));
   
-        
-    
       const chatObj = {
         chatId: chat.id,
         chatName: chat.name,
@@ -156,7 +175,6 @@ const SocketManager = (socket)=>{
         users
       };
   
-      
       return createChatHistory(chatObj);
     }));
   
@@ -165,13 +183,17 @@ const SocketManager = (socket)=>{
   };
   
   const getUserById = async id => {
-  
+ 
+  const allusers = await User.find({});
+
     const user = await User.findById(id);
+
+
     return user.username
   };
   const getMessageForId = messageId => Messages.findById(messageId);
   
-  const createChatHistory = ({
+  const createChatHistory = ({ 
     chatId = "",
     chatName = "",
     lastMessage = "",

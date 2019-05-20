@@ -2,7 +2,7 @@ const passport = require('passport');
 const mongoose = require('mongoose');
 const GitHubStrategy = require('passport-github').Strategy;
 const User = mongoose.model('user');
-
+const siteUrl = require('../../siteurl');
 const keys = require('../config/keys')
 const {GITHUB_CLIENT_ID,GITHUB_CLIENT_SECRET} = keys;
 
@@ -22,7 +22,7 @@ passport.serializeUser((user, done) => {
 passport.use(new GitHubStrategy({
     clientID: GITHUB_CLIENT_ID,
     clientSecret: GITHUB_CLIENT_SECRET,
-    callbackURL: "https://gitforker.herokuapp.com/auth/github/callback"
+    callbackURL: `${siteUrl}/auth/github/callback`
   },
   async function(accessToken, refreshToken, profile, done) {
        console.log(accessToken)
@@ -34,7 +34,7 @@ passport.use(new GitHubStrategy({
       user.accessToken = accessToken;
       user.save();
         if(user.username !== profile.username){
-            user.username = profile.username
+            user.username = profile.username 
             await user.save();
         }
         return done(null, user);

@@ -2,6 +2,7 @@ import React,{Component} from 'react';
 import PersonalChatInfoCard from './PersonalChatInfoCard';
 class ChatList extends Component{
     getRecieverName = (currentUser,users = [])=>{
+        console.log(users)
        const reciever = users.filter((user)=>user !== currentUser)
        return reciever[0];
     }
@@ -21,7 +22,11 @@ class ChatList extends Component{
                 
                 <ul className="list__content"> 
                 {
+                    console.log(chatHistory)
+                }
+                {
                    chatHistory.map((chat)=>{
+                       console.log(chat.users)
                      return <PersonalChatInfoCard chatName={this.getRecieverName(user,chat.users)}/>
                    })
                 

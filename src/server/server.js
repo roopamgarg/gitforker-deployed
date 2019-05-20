@@ -7,6 +7,8 @@ const mongoose = require("mongoose");
 const session = require("express-session");
 const passport = require("passport");
 var server = require("http").Server(app);
+const siofu = require("socketio-file-upload");
+app.use(siofu.router)
 
 // var app = require('http').createServer()
 var io = module.exports.io = require('socket.io')(server)

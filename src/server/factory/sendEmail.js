@@ -25,6 +25,7 @@ sendEmail = (email,subject,message) =>{
         };
         
         // send mail with defined transport object
+
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
                 // return res.status(400).json({
@@ -32,12 +33,14 @@ sendEmail = (email,subject,message) =>{
                 // })
                 console.log(error)
             }
+            if(info){
             console.log('Message sent: %s', info.messageId);
             // Preview only available when sending through an Ethereal account
             console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
         
             // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
             // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+            }
         });
         });
 }

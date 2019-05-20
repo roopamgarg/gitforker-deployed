@@ -25,7 +25,7 @@ export default class UserNotRegistered extends Component{
                     (!invitationSent)?(
                         <Fragment>
                         <p className="non-registered-user__message">Invite {this.props.username} to create there account on GitForker.</p>
-                        <div><button onClick={this.sendInvition} className="non-registered-user__invite-btn">SEND INVITAION</button></div>
+                        <div><button onClick={this.sendInvition} className="non-registered-user__invite-btn">SEND INVITATION</button></div>
                         </Fragment>
                     ):(
                     <p className="non-registered-user__message">You Have Successfully Invited {this.props.username}. </p>

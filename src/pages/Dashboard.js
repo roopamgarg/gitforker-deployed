@@ -7,7 +7,6 @@ import UserProfile from '../components/UserProfile';
 import PersonalChatContainer from '../components/chat/PersonalChatContainer';
 import io from 'socket.io-client';
 import {USER_CONNECTED,MESSAGE_RECIEVED,MESSAGE_SENT} from '../events'
-const socketUrl = "http://localhost:4000";
 
 class Dashboard  extends Component{
 
@@ -19,7 +18,7 @@ class Dashboard  extends Component{
         activeChat:{},
         currentChatMessages:[]
     }
-    componentWillMount(){
+    componentDidMount(){
        
         this.initSocket()
         
@@ -27,7 +26,8 @@ class Dashboard  extends Component{
 
 
     setUser = (user,chatHistory=[]) =>{ 
-        this.setState({user,chatHistory});
+        this.setState({user,chatHistory})
+        console.log(chatHistory)
     }
     initSocket = () =>{
         const { data } = this.props;
@@ -37,13 +37,19 @@ class Dashboard  extends Component{
             socket.emit(USER_CONNECTED,data.user.login,this.setUser)
             socket.on(`${MESSAGE_RECIEVED}-${data.user.login}`,(newMessage)=>{
                 const oldMessages = this.state.currentChatMessages;
+                const {sender} = newMessage;
+                const {users} =  this.state.activeChat;
+
+                if(users.includes(sender)){
                 this.setState({
                     currentChatMessages:[...oldMessages,newMessage]
                 })
+            }
              
             })
             socket.on(`${MESSAGE_SENT}-${data.user.login}`,(newMessage)=>{
                 const oldMessages = this.state.currentChatMessages;  
+               
                 this.setState({
                     currentChatMessages:[...oldMessages,newMessage]
                 })
@@ -56,14 +62,14 @@ class Dashboard  extends Component{
     }
 
     setPreviousMessages = (chat) =>{  
-      
+      console.log(chat)
         this.setState({currentChatMessages:chat.messages},()=>{
-
+            console.log(chat.messages)
         this.addChat({
                 chatId:chat.chatId,
                 chatName:chat.chatName,
                 lastMessage:chat.messages[chat.messages.length-1],
-                users:chat.users
+                users:chat.users 
             })
         })
     

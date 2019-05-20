@@ -14,8 +14,8 @@ class PersonalChatInfoCard extends Component{
    
     render(){
         const { data } = this.props;   
-      
-        if(!data.loading ){
+        console.log(data,this.props.chatName)
+        if(!data.loading && data.search_one){
            
         
         return(

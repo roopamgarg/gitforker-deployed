@@ -16,8 +16,12 @@ const RootQueryType = new GraphQLObjectType({
       type:UserType,
       resolve(parentValue, args, req){
         console.log(req.user)
+        if(req.user){
         return axios.get(`https://api.github.com/users/${req.user.username}`)
         .then((res)=>res.data)
+        }else{
+          return null
+        }
       },
     },
     search:{

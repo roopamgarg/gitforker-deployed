@@ -25,7 +25,7 @@ class IndexPage extends Component{
         <div className=" icon-container u-display-flex u-justify-content-space-between">
         <Tilt className="Tilt" options={{ max : 25 , perspective:100}} >
          
-            <img className="drop-icon" src={require('../img/FORKERS.png')}/>
+            <img className="drop-icon" src={require('../img/FORKERS.png')} style={{width:"125px",height:"45px"}}/>
             </Tilt>
         <Tilt className="Tilt" options={{ max : 25 , perspective:100}} >
          
