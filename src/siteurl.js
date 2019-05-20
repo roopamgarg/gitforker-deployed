@@ -1,3 +1,3 @@
 // const url =  'https://gitforker.herokuapp.com';
-const url = 'http://localhost:4000'
+const url = 'https://gitforker.herokuapp.com'
 module.exports  = url;
