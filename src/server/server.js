@@ -76,9 +76,7 @@ app.use(express.static("build"));
 app.get("/*", (req, res) => {
   res.sendFile(path.resolve(__dirname, "..", "..", "build", "index.html"));
 });
-// app.get("/dashboard/*", (req, res) => {
-//   res.sendFile(path.resolve(__dirname, "..", "..", "build", "index.html"));
-// });
+
 
 server.listen(PORT, () => {
   console.log("Server is started!",process.env.NODE_ENV,process.env.PORT);
