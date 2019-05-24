@@ -10,6 +10,7 @@ const {
     GraphQLBoolean,
     GraphQLInt,
     GraphQLList,
+    
 } = graphql;
 const RepoType = require('./repo_type')
 
@@ -45,6 +46,13 @@ const UserType = new GraphQLObjectType({
            async resolve(parents,args){
                 const user = await User.findOne({username:parents.login})
                 return (user)?true:false;
+            }
+        },
+        gitForkerUserId:{
+            type:GraphQLID,
+           async resolve(parents,args){
+                const user = await User.findOne({username:parents.login})
+                return user.id
             }
         },
         events_url:{type:GraphQLString},

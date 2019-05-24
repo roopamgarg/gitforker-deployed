@@ -1,26 +1,26 @@
 const fs = require('fs');
-let onlineUsers = [];
+let onlineUsers = {};
 const siofu = require("socketio-file-upload");
 const mongoose = require("mongoose");
 const models = require("./models");
 const allChats = mongoose.model("allChats");
 const User = mongoose.model("user");
 const Messages = mongoose.model("messages");
-const { USER_CONNECTED, CREATE_CHAT, MESSAGE_SENT ,MESSAGE_RECIEVED, SEND_TYPING,TYPING } = require("../events");
+const { USER_CONNECTED, CREATE_CHAT, MESSAGE_SENT ,MESSAGE_RECIEVED, SEND_TYPING,TYPING,IS_USER_CONNECTED } = require("../events");
 const io = require('./server.js').io
 
 const SocketManager = (socket)=>{
-    console.log("made socket connection", socket.id);
-  
+  ////////////////////////////////////////////////////////////
     socket.on(USER_CONNECTED, async (username, setUser) => {
-      addUserToOnlineUsersList(username);
-      const user = createUser({ username, socketId: socket.id });
       const userInfo = await User.findOne({ username: username });
+      const user = createUser({ username, socketId:socket.id , userId:userInfo.id});
+      io.emit(`${userInfo.id}-connected`,true)
+      addUserToOnlineUsersList(user);
       const chatHistory = await getAllPeviousChats(userInfo.chatsIdArray);
-      console.log("****************")
-      console.log(chatHistory)
+      console.log(onlineUsers)
       setUser(user, chatHistory);
     });
+  ////////////////////////////////////////////////////////////
   
     socket.on(CREATE_CHAT, async (username, recievers, setPreviousMessages) => {
       if (!Array.isArray(recievers)) {
@@ -69,62 +69,72 @@ const SocketManager = (socket)=>{
           console.error(err)
         }
         }
-        console.log("-----")
-        console.log(users);
         
         setPreviousMessages(newChat)
-        // addChat(createChat(newChat));
       }
     });
-  
-  
-    socket.on(MESSAGE_SENT,async (chatId,sender,message)=>{
+  ////////////////////////////////////////////////////////////
+    socket.on(MESSAGE_SENT,async (chatId,senderId,message)=>{
+     
       const chat =await allChats.findById(chatId)
 
-      const user =await User.findOne({username:sender})
+      const user =await User.findById(senderId)
    
       sender = user._id;
-      
+
       const senderName = user.username;
       const reciever = chat.users.filter((id) =>String(id) !== String(sender))
-     
-      const recieverName = await getUserById(reciever[0])
-     
       let messageBody = await createMessage({message,sender})
       let newMessage = await new Messages(messageBody)
       chat.messages.push(newMessage._id)
-      
-     
       messageBody.sender = senderName
-        
-      console.log(messageBody);
-      io.emit(`${MESSAGE_RECIEVED}-${recieverName}`,messageBody)
-      io.emit(`${MESSAGE_SENT}-${senderName}`,messageBody)
+      io.emit(`${MESSAGE_RECIEVED}-${reciever[0]}`,messageBody,chatId)
+      io.emit(`${MESSAGE_SENT}-${sender}`,messageBody,chatId)
       await newMessage.save();
       await chat.save();
     })
 
+    socket.on(IS_USER_CONNECTED,(userId)=>{
+      console.log("helllllllll")
+
+      for(let key in onlineUsers){
+        console.log(key)
+       if(onlineUsers[key].userId === userId){
+     
+        io.emit(`${userId}-connected`)
+       }
+      }
+    })
+  ////////////////////////////////////////////////////////////
     socket.on(SEND_TYPING,(sender,reciever,chatId)=>{
       
       socket.broadcast.emit(`${TYPING}-${chatId}`,sender)
     })
+  ////////////////////////////////////////////////////////////
 
-    
-let files = {};
-let struct = { 
-        name: null, 
-        type: null, 
-        size: 0, 
-        data: [], 
-        slice: 0, 
-    };
 
-    socket.on('slice upload',function(socket){
-      console.log("called")
-      var uploader = new siofu();
-      uploader.dir = "/path/to/save/uploads";
-      uploader.listen(socket);
+  socket.on('disconnect', function () {
+    io.emit('user disconnected');
+    onlineUsers[socket.id] ? io.emit(`${onlineUsers[socket.id].userId}-disconnected`) : null
+    removeFromOnlineUsersList(socket.id)
+
   });
+    
+// let files = {};
+// let struct = { 
+//         name: null, 
+//         type: null, 
+//         size: 0, 
+//         data: [], 
+//         slice: 0, 
+//     };
+
+//     socket.on('slice upload',function(socket){
+      
+//       var uploader = new siofu();
+//       uploader.dir = "/path/to/save/uploads";
+//       uploader.listen(socket);
+//   });
   };
 
 
@@ -139,7 +149,7 @@ let struct = {
       date
     }
   )
-  
+  /////////////////////////////////////////////////////////////////////////////
   const getIdByUser =async username =>{
     user =await User.find({username:username})
 
@@ -191,8 +201,13 @@ let struct = {
 
     return user.username
   };
+
+  /////////////////////////////////////////////////////////////////////////////
+
   const getMessageForId = messageId => Messages.findById(messageId);
   
+  /////////////////////////////////////////////////////////////////////////////
+
   const createChatHistory = ({ 
     chatId = "",
     chatName = "",
@@ -204,6 +219,8 @@ let struct = {
     lastMessage,
     users
   });
+
+  /////////////////////////////////////////////////////////////////////////////
   
   const getAllPreviousMessages = async messagesIdArray => {
     const messages = await Promise.all(messagesIdArray.map(async id => {
@@ -216,23 +233,38 @@ let struct = {
        
     return messages;
   };
+  /////////////////////////////////////////////////////////////////////////////
   
   const uuid = require("uuid/v4");
+  /////////////////////////////////////////////////////////////////////////////
   
-  const addUserToOnlineUsersList = username => {
-    if (isUserAlreadyOnline(username)) {
-      onlineUsers.push(username);
+  const addUserToOnlineUsersList = ({username,socketId,userId}) => {
+    if (!isUserAlreadyOnline(socketId)) {
+      onlineUsers[socketId] = {username,userId}
+    console.log("online user list")
+    console.log(onlineUsers)
     }
   };
+
+
+  const removeFromOnlineUsersList = socketId =>{
+    delete  onlineUsers[socketId]
+    console.log("online user list")
+    console.log(onlineUsers)
+  }
+  /////////////////////////////////////////////////////////////////////////////
   
   const isUserAlreadyOnline = username => {
     return username in onlineUsers;
   };
+  /////////////////////////////////////////////////////////////////////////////
   
-  const createUser = ({ username = "", socketId = null } = {}) => ({
+  const createUser = ({ username = "", socketId = null , userId = ""} = {}) => ({
     username,
-    socketId
+    socketId,
+    userId
   });
+  /////////////////////////////////////////////////////////////////////////////
   
   const createChat = ({
     chatId = "",
@@ -245,5 +277,6 @@ let struct = {
     messages,
     typingUsers
   });
+  /////////////////////////////////////////////////////////////////////////////
   
   module.exports = SocketManager

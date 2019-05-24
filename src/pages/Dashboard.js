@@ -35,7 +35,8 @@ class Dashboard  extends Component{
         socket.on('connect',()=>{
             console.log("Connected with " + data.user.login);
             socket.emit(USER_CONNECTED,data.user.login,this.setUser)
-            socket.on(`${MESSAGE_RECIEVED}-${data.user.login}`,(newMessage)=>{
+           
+            socket.on(`${MESSAGE_RECIEVED}-${data.user.gitForkerUserId}`,(newMessage)=>{
                 const oldMessages = this.state.currentChatMessages;
                 const {sender} = newMessage;
                 const {users} =  this.state.activeChat;
@@ -44,12 +45,12 @@ class Dashboard  extends Component{
                 this.setState({
                     currentChatMessages:[...oldMessages,newMessage]
                 })
-            }
+                }
              
             })
-            socket.on(`${MESSAGE_SENT}-${data.user.login}`,(newMessage)=>{
+            socket.on(`${MESSAGE_SENT}-${data.user.gitForkerUserId}`,(newMessage,chatId)=>{
                 const oldMessages = this.state.currentChatMessages;  
-               
+                this.setLastMessage(chatId,newMessage)
                 this.setState({
                     currentChatMessages:[...oldMessages,newMessage]
                 })
@@ -93,7 +94,26 @@ class Dashboard  extends Component{
        
     }
     
-   
+    setLastMessage = (chatId,lastMessage) =>{
+        console.log("/>?>?>?>>?")
+        
+        const chatHistory = this.state.chatHistory
+        chatHistory.forEach((chat,index) => {
+            if(chat.chatId === chatId){
+                chat.lastMessage = lastMessage
+               
+                const otherChats = this.state.chatHistory.filter((chat)=>chat.chatId !== chatId)
+                this.setState({
+                    chatHistory:[chat,...otherChats]
+                },()=>{
+                    console.log(this.state.chatHistory)
+                    console.log(this.state.currentChatMessages)
+                })
+
+            }
+        })
+       
+    }
     render(){
         return(
             <div className="dashboard u-display-flex">
@@ -114,6 +134,8 @@ class Dashboard  extends Component{
                            <Route path="/dashboard" component={()=><ChatList 
                                                                         chatHistory={this.state.chatHistory}
                                                                         user={this.props.data.user.login}
+                                                                        socket={this.state.socket}
+                                                                       
                                                                         />}/>
                            <Route path="/find_forker" component={FindForkerList}/>
                            
@@ -129,9 +151,11 @@ class Dashboard  extends Component{
                                                                             messages={this.state.currentChatMessages}
                                                                             socket={this.state.socket}
                                                                             user={this.props.data.user.login}
+                                                                            userId={this.props.data.user.gitForkerUserId}
                                                                             reciever={this.props.match.params.user}
                                                                             addChat={this.addChat}
                                                                             chat={this.state.activeChat}
+                                                                            setLastMessage={this.setLastMessage}
                                                                         />} />
                     <Route path="/find_forker/:id"  component={()=><UserProfile id={this.props.match.params.id}/>}/>
 

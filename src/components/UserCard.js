@@ -14,10 +14,10 @@ class UserCard extends Component{
                     <h3>{this.props.username}</h3>
                    
                 </div>
-                <div className="user-card__current-status u-display-flex u-justify-content-center u-align-items-center u-flex-column flex-fill">
-                    {/* <div className="user-card__online">
+            <div className="user-card__current-status u-display-flex u-justify-content-center u-align-items-center u-flex-column flex-fill">
+            <div className="user-card__online"> 
                     </div>
-                    <div className="user-card__msg u-display-flex u-justify-content-center u-align-items-center">
+                    {/* <div className="user-card__msg u-display-flex u-justify-content-center u-align-items-center">
                         9+
                     </div> */}
                 </div>

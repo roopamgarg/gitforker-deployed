@@ -8,6 +8,7 @@ query{
     user{
       login
       avatar_url
+      gitForkerUserId
     }
 }`
 
@@ -22,7 +23,9 @@ export default (WrappedComponent) =>{
             }
             return (nextProps.data.user)
         }
+
     render(){
+        
         const { loading,user } = this.props.data 
         return (!loading && user)?
         <WrappedComponent {...this.props}  />:

@@ -28,15 +28,13 @@ query Search($username:String!){
       console.log(this.props);
       console.log(prevProps.data)
         if(!data.loading && data.search_one && data.search_one.isGitforkerUser && (prevProps.data !== this.props.data || prevProps.reciever !== this.props.reciever)){
-        
             socket.emit(CREATE_CHAT,user,data.search_one.login,setPreviousMessages);
-
         }
     } 
   
     render(){
-        const { socket,user,data,chat,messages } = this.props; 
-       console.log(chat)
+        const { socket,user,userId,data,chat,messages,setPreviousMessages } = this.props; 
+       console.log(messages)
         if(data.loading){
             return <Loader/>
         } 
@@ -51,8 +49,8 @@ query Search($username:String!){
         return(
             <div className="chat-container">
                <ChatHeader socket={socket} chat={chat} chatName={data.search_one.login} image={data.search_one.avatar_url}/>
-                <MessageContainer sender={user} messages={messages} chat={chat} socket={socket}/>
-                <MessageInput socket={socket} chatId={chat.chatId} sender={user} reciever={data.search_one.login} />
+                <MessageContainer sender={user} messages={messages} chat={chat} setPreviousMessages={setPreviousMessages} socket={socket}/>
+                <MessageInput socket={socket} chatId={chat.chatId} senderId={userId} reciever={data.search_one.login} setPreviousMessages={setPreviousMessages} />
             </div>
         )
         }

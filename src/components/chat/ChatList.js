@@ -21,29 +21,20 @@ class ChatList extends Component{
                 }
                 
                 <ul className="list__content"> 
-                {
-                    console.log(chatHistory)
-                }
+                
                 {
                    chatHistory.map((chat)=>{
-                       console.log(chat.users)
-                     return <PersonalChatInfoCard chatName={this.getRecieverName(user,chat.users)}/>
+                       
+                     return <PersonalChatInfoCard 
+                                    chatName={this.getRecieverName(user,chat.users)} 
+                                    socket={this.props.socket}
+                                    lastMessage={chat.lastMessage.message}
+                                    />
                    })
                 
                 }
                 </ul>
-                {/*
-                   
-                    <li><UserCard/></li>
-                    <li><UserCard/></li>
-                    <li><UserCard/></li>
-                    <li><UserCard/></li>
-                    <li><UserCard/></li>
-                    <li><UserCard/></li>
-                    <li><UserCard/></li>
-
-                    
-                < */}
+               
             </div>
         )
     }

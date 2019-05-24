@@ -6,11 +6,14 @@ export default class MessageInput extends Component{
     }
     onSubmitHandler= (e) =>{
         e.preventDefault();
-        const { socket,sender,chatId,reciever } = this.props
+        const { socket,senderId,chatId,reciever,setPreviousMessages } = this.props
         const { messageInput } = this.state
         console.log(this.state.messageInput) 
-        socket.emit(MESSAGE_SENT,chatId,sender,messageInput)
+        socket.emit(MESSAGE_SENT,chatId,senderId,messageInput)
+        console.log(chatId,messageInput)
+        // setPreviousMessages(chatId,messageInput)
         this.setState({messageInput:""})
+       
     }
     sendTyping = () =>{
         console.log("calling")

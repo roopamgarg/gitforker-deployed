@@ -4,7 +4,7 @@ const GitHubStrategy = require('passport-github').Strategy;
 const User = mongoose.model('user');
 const siteUrl = require('../../siteurl');
 const keys = require('../config/keys')
-const {GITHUB_CLIENT_ID,GITHUB_CLIENT_SECRET} = keys;
+const {GITHUB_CLIENT_ID,GITHUB_CLIENT_SECRET,SITE_URL} = keys;
 
 
 
@@ -18,11 +18,14 @@ passport.serializeUser((user, done) => {
     });
   });
   
+if(process.env.NODE_ENV === "production"){
+
+}
 
 passport.use(new GitHubStrategy({
     clientID: GITHUB_CLIENT_ID,
     clientSecret: GITHUB_CLIENT_SECRET,
-    callbackURL: `${siteUrl}/auth/github/callback`
+    callbackURL: `${SITE_URL}/auth/github/callback`
   },
   async function(accessToken, refreshToken, profile, done) {
        console.log(accessToken)

@@ -31,7 +31,11 @@ export default class MessageContainer extends Component{
         const {messages,sender} = this.props;
         return (
             <div id="message-container" ref={el => { this.el = el; }} onScroll={()=>this.setState({someData:"90"})} className={`message-container `}  >
+                {
+                     console.log(messages)
+                }
                 { 
+                   
                     messages.map((message)=>{
                     return( <div className={`${(message.sender===sender)?"right":""} message-container__message-box`}>
                                 <div className="message-container__message-content">
