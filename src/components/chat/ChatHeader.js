@@ -12,10 +12,10 @@ export default class ChatHeader extends Component{
         },2000)
         if(this.props.socket && this.props.chat.chatId ){
             const {socket,chat} = this.props
-            console.log(`${TYPING}-${chat.chatId}`);
+           
             socket.on(`${TYPING}-${chat.chatId}`,(sender)=>{
                 let typingUsers = this.state.typingUsers
-                console.log(sender , typingUsers)
+              
                
                 if(!typingUsers.find((el)=>el===sender)){
                 this.setState({typingUsers:[...typingUsers,sender]})
@@ -23,7 +23,7 @@ export default class ChatHeader extends Component{
                 }
             })
           }else{
-              console.log(this.props)
+              
     
           }
     }

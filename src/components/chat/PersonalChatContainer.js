@@ -23,18 +23,41 @@ query Search($username:String!){
 
  class PersonalChatContainer extends Component{
 
-    componentDidUpdate = (prevProps,prevState) => {
-        const { socket,user,data,setPreviousMessages } = this.props;   
-      console.log(this.props);
-      console.log(prevProps.data)
-        if(!data.loading && data.search_one && data.search_one.isGitforkerUser && (prevProps.data !== this.props.data || prevProps.reciever !== this.props.reciever)){
+    
+    componentDidUpdate = () =>{
+     const { socket,user,data,messages,setPreviousMessages,chat } = this.props;  
+     console.log(chat) 
+        if(!data.loading && data.search_one && data.search_one.isGitforkerUser && messages.length === 0){
             socket.emit(CREATE_CHAT,user,data.search_one.login,setPreviousMessages);
         }
-    } 
+    }
+    
+//     componentWillReceiveProps = (prevProps) =>{
+//      console.log(this.props)
+//      const { socket,user,data,setPreviousMessages,resetChatMessages } = this.props;   
+//      console.log(prevProps.reciever)
+//      console.log(this.props.reciever)
+//      if(!data.loading && data.search_one && data.search_one.isGitforkerUser && (prevProps.data !== this.props.data || prevProps.reciever !== this.props.reciever)){
+//          socket.emit(CREATE_CHAT,user,data.search_one.login,setPreviousMessages);
+//      }
+//  }
+    componentDidUnmount = () =>{
+     const { resetChatMessages } = this.props;  
+      
+     resetChatMessages();
+    }
+//  getSnapshotBeforeUpdate = (prevProps) => {
+//         const { socket,user,data,setPreviousMessages,resetChatMessages } = this.props;   
+//         console.log(this.props.reciever)
+//         console.log(prevProps.reciever)
+//         if(!data.loading && data.search_one && data.search_one.isGitforkerUser && (prevProps.data !== this.props.data || prevProps.reciever !== this.props.reciever)){
+//             socket.emit(CREATE_CHAT,user,data.search_one.login,setPreviousMessages);
+//         }
+//     } 
   
     render(){
-        const { socket,user,userId,data,chat,messages,setPreviousMessages } = this.props; 
-       console.log(messages)
+        const { socket,user,userId,data,chat,messages,setPreviousMessages,timestamp } = this.props; 
+    
         if(data.loading){
             return <Loader/>
         } 
@@ -48,8 +71,9 @@ query Search($username:String!){
         else{
         return(
             <div className="chat-container">
+              
                <ChatHeader socket={socket} chat={chat} chatName={data.search_one.login} image={data.search_one.avatar_url}/>
-                <MessageContainer sender={user} messages={messages} chat={chat} setPreviousMessages={setPreviousMessages} socket={socket}/>
+                <MessageContainer sender={user} reciever={data.search_one.login} messages={messages} chat={chat} setPreviousMessages={setPreviousMessages} socket={socket}/>
                 <MessageInput socket={socket} chatId={chat.chatId} senderId={userId} reciever={data.search_one.login} setPreviousMessages={setPreviousMessages} />
             </div>
         )

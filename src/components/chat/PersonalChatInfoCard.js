@@ -53,7 +53,7 @@ componentWillMount = ()=>{
         const { data } = this.props;  
         const { isUserOnline } = this.state;   
 
-        console.log(data,this.props.chatName)
+    
         if(!data.loading && data.search_one){
            
         return(

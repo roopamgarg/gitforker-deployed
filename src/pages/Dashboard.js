@@ -24,7 +24,12 @@ class Dashboard  extends Component{
         
     }
 
-
+    resetChatMessages = () =>{
+        this.setState({
+           activeChat:{},
+            currentChatMessages:[]
+        })
+    }
     setUser = (user,chatHistory=[]) =>{ 
         this.setState({user,chatHistory})
         console.log(chatHistory)
@@ -33,14 +38,14 @@ class Dashboard  extends Component{
         const { data } = this.props;
         const socket = io()
         socket.on('connect',()=>{
-            console.log("Connected with " + data.user.login);
+          //  console.log("Connected with " + data.user.login);
             socket.emit(USER_CONNECTED,data.user.login,this.setUser)
            
-            socket.on(`${MESSAGE_RECIEVED}-${data.user.gitForkerUserId}`,(newMessage)=>{
+            socket.on(`${MESSAGE_RECIEVED}-${data.user.gitForkerUserId}`,(newMessage,chatId)=>{
                 const oldMessages = this.state.currentChatMessages;
                 const {sender} = newMessage;
                 const {users} =  this.state.activeChat;
-
+                this.setLastMessage(chatId,newMessage)
                 if(users.includes(sender)){
                 this.setState({
                     currentChatMessages:[...oldMessages,newMessage]
@@ -63,9 +68,9 @@ class Dashboard  extends Component{
     }
 
     setPreviousMessages = (chat) =>{  
-      console.log(chat)
+      //console.log(chat)
         this.setState({currentChatMessages:chat.messages},()=>{
-            console.log(chat.messages)
+       //     console.log(chat.messages)
         this.addChat({
                 chatId:chat.chatId,
                 chatName:chat.chatName,
@@ -73,15 +78,16 @@ class Dashboard  extends Component{
                 users:chat.users 
             })
         })
+      
     
         
         
        }
     addChat = (chat) =>{
-      
+      console.log(chat)
         const oldChatHistory = this.state.chatHistory;
         const isPreviousChat = oldChatHistory.filter(({id})=>(chat.id === id))
-        if(isPreviousChat.length < 1){
+        if(isPreviousChat.length < 1){//if chat is not present already
         this.setState({
             chatHistory:[chat,...oldChatHistory],
             activeChat:chat
@@ -95,7 +101,7 @@ class Dashboard  extends Component{
     }
     
     setLastMessage = (chatId,lastMessage) =>{
-        console.log("/>?>?>?>>?")
+       // console.log("/>?>?>?>>?")
         
         const chatHistory = this.state.chatHistory
         chatHistory.forEach((chat,index) => {
@@ -106,8 +112,8 @@ class Dashboard  extends Component{
                 this.setState({
                     chatHistory:[chat,...otherChats]
                 },()=>{
-                    console.log(this.state.chatHistory)
-                    console.log(this.state.currentChatMessages)
+             //       console.log(this.state.chatHistory)
+             //       console.log(this.state.currentChatMessages)
                 })
 
             }
@@ -146,7 +152,9 @@ class Dashboard  extends Component{
                 
               
 
-                    <Route path="/dashboard/:user"  component={()=><PersonalChatContainer 
+                    <Route path="/dashboard/:user?"  component={()=><PersonalChatContainer 
+                                                                            timestamp={new Date().toString()}
+                                                                            resetChatMessages={this.resetChatMessages}
                                                                             setPreviousMessages={this.setPreviousMessages}
                                                                             messages={this.state.currentChatMessages}
                                                                             socket={this.state.socket}

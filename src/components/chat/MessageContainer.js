@@ -19,7 +19,7 @@ export default class MessageContainer extends Component{
       }
     
       componentDidUpdate() {
-        
+        console.log(this.props.messages)
       
         if( this.el.scrollTop === this.state.maxheight){
             this.el.scrollTop = this.el.scrollHeight
@@ -31,9 +31,7 @@ export default class MessageContainer extends Component{
         const {messages,sender} = this.props;
         return (
             <div id="message-container" ref={el => { this.el = el; }} onScroll={()=>this.setState({someData:"90"})} className={`message-container `}  >
-                {
-                     console.log(messages)
-                }
+          
                 { 
                    
                     messages.map((message)=>{
