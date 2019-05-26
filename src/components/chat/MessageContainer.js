@@ -11,7 +11,7 @@ export default class MessageContainer extends Component{
         }
     }
     
-    // el = ""
+    
     componentDidMount() {
     
         this.el.scrollTop = this.el.scrollHeight
