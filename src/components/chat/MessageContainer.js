@@ -18,10 +18,10 @@ export default class MessageContainer extends Component{
         this.setState({maxheight:this.el.scrollHeight})
       }
     
-      componentDidUpdate() {
+      componentDidUpdate(prevProps) {
         console.log(this.props.messages)
       
-        if( this.el.scrollTop === this.state.maxheight){
+        if( this.el.scrollTop !== this.state.maxheight && this.props.messages.length !== prevProps.messages.length){
             this.el.scrollTop = this.el.scrollHeight
         }
  

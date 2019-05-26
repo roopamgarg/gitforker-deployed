@@ -95,12 +95,12 @@ const SocketManager = (socket)=>{
     })
 
     socket.on(IS_USER_CONNECTED,(userId)=>{
-      console.log("helllllllll")
+      
 
       for(let key in onlineUsers){
-        console.log(key)
+        
        if(onlineUsers[key].userId === userId){
-     
+     console.log(userId)
         io.emit(`${userId}-connected`)
        }
       }

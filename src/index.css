@@ -60,6 +60,12 @@ ORDER: Base + typography > general layout + grid > page layout > components
     -webkit-transform: scale3d(1, 1, 1);
     transform: scale3d(1, 1, 1); } }
 
+@-webkit-keyframes fadeIn {
+  from {
+    opacity: 0; }
+  to {
+    opacity: 1; } }
+
 *,
 *::after,
 *::before {
@@ -386,7 +392,8 @@ a {
     padding: 1rem;
     color: white;
     border-radius: .5rem;
-    font-size: 1.6rem; }
+    font-size: 1.6rem;
+    animation: fadeIn .5s; }
   .message-container__message-box {
     display: flex;
     flex-direction: column;

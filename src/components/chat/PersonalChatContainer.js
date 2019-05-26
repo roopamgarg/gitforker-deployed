@@ -13,7 +13,6 @@ query Search($username:String!){
 	search_one(username:$username){
     login
     avatar_url
-    bio   
     email
     isGitforkerUser
   }
@@ -23,39 +22,8 @@ query Search($username:String!){
 
  class PersonalChatContainer extends Component{
 
-    
-    componentDidUpdate = () =>{
-     const { socket,user,data,messages,setPreviousMessages,chat } = this.props;  
-     console.log(chat) 
-        if(!data.loading && data.search_one && data.search_one.isGitforkerUser && messages.length === 0){
-            socket.emit(CREATE_CHAT,user,data.search_one.login,setPreviousMessages);
-        }
-    }
-    
-//     componentWillReceiveProps = (prevProps) =>{
-//      console.log(this.props)
-//      const { socket,user,data,setPreviousMessages,resetChatMessages } = this.props;   
-//      console.log(prevProps.reciever)
-//      console.log(this.props.reciever)
-//      if(!data.loading && data.search_one && data.search_one.isGitforkerUser && (prevProps.data !== this.props.data || prevProps.reciever !== this.props.reciever)){
-//          socket.emit(CREATE_CHAT,user,data.search_one.login,setPreviousMessages);
-//      }
-//  }
-    componentDidUnmount = () =>{
-     const { resetChatMessages } = this.props;  
-      
-     resetChatMessages();
-    }
-//  getSnapshotBeforeUpdate = (prevProps) => {
-//         const { socket,user,data,setPreviousMessages,resetChatMessages } = this.props;   
-//         console.log(this.props.reciever)
-//         console.log(prevProps.reciever)
-//         if(!data.loading && data.search_one && data.search_one.isGitforkerUser && (prevProps.data !== this.props.data || prevProps.reciever !== this.props.reciever)){
-//             socket.emit(CREATE_CHAT,user,data.search_one.login,setPreviousMessages);
-//         }
-//     } 
-  
     render(){
+        console.log("4. render")
         const { socket,user,userId,data,chat,messages,setPreviousMessages,timestamp } = this.props; 
     
         if(data.loading){
@@ -84,5 +52,8 @@ query Search($username:String!){
 
 
 export default graphql(query,{
-    options:(props)=> {return { variables: {username : props.reciever}}}
+    options:(props)=> {return { variables: {username : props.reciever},fetchPolicy:'no-cache',onCompleted:function(){
+        props.resetChatMessages(props.user,props.reciever);
+        // props.socket.emit(CREATE_CHAT,props.user,props.reciever,props.setPreviousMessages);
+    }}}
  })(PersonalChatContainer);

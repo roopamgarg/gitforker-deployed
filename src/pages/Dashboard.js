@@ -6,7 +6,7 @@ import FindForkerList from '../components/FindForkersList';
 import UserProfile from '../components/UserProfile';
 import PersonalChatContainer from '../components/chat/PersonalChatContainer';
 import io from 'socket.io-client';
-import {USER_CONNECTED,MESSAGE_RECIEVED,MESSAGE_SENT} from '../events'
+import {USER_CONNECTED,MESSAGE_RECIEVED,MESSAGE_SENT,CREATE_CHAT} from '../events'
 
 class Dashboard  extends Component{
 
@@ -24,10 +24,12 @@ class Dashboard  extends Component{
         
     }
 
-    resetChatMessages = () =>{
+    resetChatMessages = (user,reciever) =>{
         this.setState({
            activeChat:{},
             currentChatMessages:[]
+        },()=>{
+            this.state.socket.emit(CREATE_CHAT,user,reciever,this.setPreviousMessages);
         })
     }
     setUser = (user,chatHistory=[]) =>{ 
@@ -91,10 +93,14 @@ class Dashboard  extends Component{
         this.setState({
             chatHistory:[chat,...oldChatHistory],
             activeChat:chat
+        },()=>{
+            console.log(this.state.chat) 
         });
         }else{
             this.setState({
                 activeChat:chat
+            },()=>{
+                console.log(this.state.chat) 
             });
         }
        
@@ -152,8 +158,7 @@ class Dashboard  extends Component{
                 
               
 
-                    <Route path="/dashboard/:user?"  component={()=><PersonalChatContainer 
-                                                                            timestamp={new Date().toString()}
+                    <Route path="/dashboard/:user"  render={()=><PersonalChatContainer 
                                                                             resetChatMessages={this.resetChatMessages}
                                                                             setPreviousMessages={this.setPreviousMessages}
                                                                             messages={this.state.currentChatMessages}

@@ -15,38 +15,44 @@ query Search($username:String!){
 class PersonalChatInfoCard extends Component{
    
     state = {
-        isUserOnline:false
+        isUserOnline:false,
+        onlineCheck:false
     }
     
+formatLastMessage = (message) =>{
+    if(message){
+    message = message.split("")
+    return message.length > 20 ? (message.slice(0,20).join("") + "...") : message.join("")
+    }
+    return "Start new Chat"
+}
+
+componentWillMount = ()=>{
+    console.log("tried")
+    const { data,socket } = this.props;  
     
-    componentDidMount = () => {
-        const { data } = this.props;  
-       
-        if(!data.loading && data.search_one ){
+  
+    if(!data.loading && data.search_one && !this.state.onlineCheck){
         const {gitForkerUserId} = data.search_one
-        const socket = this.props.socket;
-     
-        
-        socket.on(`${gitForkerUserId}-connected`,(data)=>{
+        socket.on(`${gitForkerUserId}-connected`,()=>{
+            console.log("connnneccccteddd")
             this.setState({
-                isUserOnline:true
+                isUserOnline:true,
+                onlineCheck:true
             })
         })
 
         socket.on(`${gitForkerUserId}-disconnected`,()=>{
             this.setState({
-                isUserOnline:false
+                isUserOnline:false,
+                onlineCheck:true
             })
         })
-      
-        
-    }
-}
-
-componentWillMount = ()=>{
-    const { data,socket } = this.props;  
-    if(!data.loading && data.search_one){
+        console.log("tried888787")
         socket.emit(IS_USER_CONNECTED,data.search_one.gitForkerUserId)
+             
+        
+    
     }
 }
     render(){
@@ -64,7 +70,7 @@ componentWillMount = ()=>{
                 </div>
                 <div className="user-card__details flex-fill u-text-left">
                     <h3>{this.props.chatName}</h3>
-                    <p>{this.props.lastMessage}</p>
+                    <p>{this.formatLastMessage(this.props.lastMessage)}</p>
                 </div>
                 <div className="user-card__current-status u-display-flex u-justify-content-center u-align-items-center u-flex-column flex-fill">
                    {
