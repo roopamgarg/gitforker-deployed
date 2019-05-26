@@ -27,6 +27,36 @@ formatLastMessage = (message) =>{
     return "Start new Chat"
 }
 
+
+componentDidUpdate = ()=>{
+    console.log("tried")
+    const { data,socket } = this.props;  
+    
+  
+    if(!data.loading && data.search_one && !this.state.onlineCheck){
+        const {gitForkerUserId} = data.search_one
+        socket.on(`${gitForkerUserId}-connected`,()=>{
+            console.log("connnneccccteddd")
+            this.setState({
+                isUserOnline:true,
+                onlineCheck:true
+            })
+        })
+
+        socket.on(`${gitForkerUserId}-disconnected`,()=>{
+            this.setState({
+                isUserOnline:false,
+                onlineCheck:true
+            })
+        })
+        console.log("tried888787")
+        socket.emit(IS_USER_CONNECTED,gitForkerUserId)
+        
+             
+        
+    
+    }
+}
 componentWillMount = ()=>{
     console.log("tried")
     const { data,socket } = this.props;  
