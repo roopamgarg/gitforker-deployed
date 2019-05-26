@@ -53,6 +53,5 @@ query Search($username:String!){
 export default graphql(query,{
     options:(props)=> {return { variables: {username : props.reciever},fetchPolicy:'no-cache',onCompleted:function(){
         props.resetChatMessages(props.user,props.reciever);
-        // props.socket.emit(CREATE_CHAT,props.user,props.reciever,props.setPreviousMessages);
     }}}
  })(PersonalChatContainer);

@@ -25,11 +25,11 @@ export default class MessageInput extends Component{
             <form onSubmit={(e)=>this.onSubmitHandler(e)} className="message-input">
                 <textarea
                  placeholder="Type Your Message Here."
-                 onChange={(e)=>this.setState({messageInput:e.target.value})} 
+                 onChange={(e)=>{this.setState({messageInput:e.target.value});this.sendTyping()}}
                  value={this.state.messageInput}
                  className="message-input__textarea"
                  required
-                 onInput={this.sendTyping}
+               
                  />
                 <button type="submit" className="message-input__btn"><i class="fas fa-paper-plane"></i></button>
             </form>
