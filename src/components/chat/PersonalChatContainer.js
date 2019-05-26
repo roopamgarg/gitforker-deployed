@@ -41,7 +41,7 @@ query Search($username:String!){
             <div className="chat-container">
                <ChatHeader socket={socket} chat={chat} chatName={data.search_one.login} image={data.search_one.avatar_url}/>
                 <MessageContainer sender={user} reciever={data.search_one.login} messages={messages} chat={chat} setPreviousMessages={setPreviousMessages} socket={socket}/>
-                <MessageInput socket={socket} chatId={chat.chatId} sender={user} reciever={data.search_one.login} setPreviousMessages={setPreviousMessages} />
+                <MessageInput socket={socket} chatId={chat.chatId} senderId={userId} sender={user} reciever={data.search_one.login} setPreviousMessages={setPreviousMessages} />
             </div>
         )
         }
