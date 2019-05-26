@@ -6,7 +6,7 @@ export default class ChatHeader extends Component{
     state = {
         typingUsers : []
     }
-    componentDidMount = () =>{
+    componentDidUpdate = () =>{
         setInterval(()=>{  
             this.setState({typingUsers:[]})
         },2000)
@@ -16,7 +16,7 @@ export default class ChatHeader extends Component{
             socket.on(`${TYPING}-${chat.chatId}`,(sender)=>{
                 let typingUsers = this.state.typingUsers
               
-               
+               console.log("someone is typing")
                 if(!typingUsers.find((el)=>el===sender)){
                 this.setState({typingUsers:[...typingUsers,sender]})
                

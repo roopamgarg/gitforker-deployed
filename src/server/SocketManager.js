@@ -107,7 +107,7 @@ const SocketManager = (socket)=>{
     })
   ////////////////////////////////////////////////////////////
     socket.on(SEND_TYPING,(sender,reciever,chatId)=>{
-      
+     
       socket.broadcast.emit(`${TYPING}-${chatId}`,sender)
     })
   ////////////////////////////////////////////////////////////
