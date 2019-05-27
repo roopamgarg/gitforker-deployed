@@ -51,7 +51,7 @@ query Search($username:String!){
 
 
 export default graphql(query,{
-    options:(props)=> {return { variables: {username : props.reciever},fetchPolicy:'no-cache',onCompleted:function(){
+    options:(props)=> {return { variables: {username : props.reciever},onCompleted:function(){
         props.resetChatMessages(props.user,props.reciever);
     }}}
  })(PersonalChatContainer);
