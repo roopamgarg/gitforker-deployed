@@ -7,7 +7,7 @@ export default class ChatHeader extends Component{
         typingUsers : []
     }
     componentDidUpdate = () =>{
-        setInterval(()=>{  
+        setTimeout(()=>{  
             this.setState({typingUsers:[]})
         },2000)
         if(this.props.socket && this.props.chat.chatId ){
@@ -20,9 +20,6 @@ export default class ChatHeader extends Component{
                     this.setState({typingUsers:[...typingUsers,sender]})
                 }
             })
-          }else{
-              
-    
           }
     }
 
