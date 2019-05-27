@@ -149,7 +149,9 @@ class Dashboard  extends Component{
                                                                         socket={this.state.socket}
                                                                        
                                                                         />}/>
-                           <Route path="/find_forker" component={FindForkerList}/>
+                           <Route path="/find_forker" component={()=><FindForkerList 
+                                                                         socket={this.state.socket}                
+                                                                        />}/>
                            
                             
                        </div>

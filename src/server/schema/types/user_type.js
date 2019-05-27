@@ -52,7 +52,7 @@ const UserType = new GraphQLObjectType({
             type:GraphQLID,
            async resolve(parents,args){
                 const user = await User.findOne({username:parents.login})
-                return user.id
+                return user ? user.id : null
             }
         },
         events_url:{type:GraphQLString},

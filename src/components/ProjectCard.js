@@ -7,7 +7,6 @@ class ProjectCard extends Component{
             'bluish-gradient',
             'redish-gradient',
             'greenish-gradient',
-         
         ]
         var min=0; 
         var max=gradients.length;  
