@@ -1,15 +1,30 @@
 const fs = require('fs');
 let onlineUsers = {};
+let chatRooms = {};
+global.chatRoomSocket = null;
+global.socket = null;
+
+
 const siofu = require("socketio-file-upload");
 const mongoose = require("mongoose");
 const models = require("./models");
 const allChats = mongoose.model("allChats");
 const User = mongoose.model("user");
 const Messages = mongoose.model("messages");
-const { USER_CONNECTED, CREATE_CHAT, MESSAGE_SENT ,MESSAGE_RECIEVED, SEND_TYPING,TYPING,IS_USER_CONNECTED } = require("../events");
+const { 
+  USER_CONNECTED,
+  CREATE_CHAT, 
+  MESSAGE_SENT,
+  MESSAGE_RECIEVED, 
+  SEND_TYPING,
+  TYPING,
+  IS_USER_CONNECTED,
+  CLOSE_CHAT_ROOM 
+} = require("../events");
 const io = require('./server.js').io
 
 const SocketManager = (socket)=>{
+  global.socket = socket
   ////////////////////////////////////////////////////////////
     socket.on(USER_CONNECTED, async (username, setUser) => {
       const userInfo = await User.findOne({ username: username });
@@ -17,25 +32,28 @@ const SocketManager = (socket)=>{
       io.emit(`${userInfo.id}-connected`,true)
       addUserToOnlineUsersList(user);
       const chatHistory = await getAllPeviousChats(userInfo.chatsIdArray);
-      console.log(onlineUsers)
+    
       setUser(user, chatHistory);
     });
   ////////////////////////////////////////////////////////////
   
-    socket.on(CREATE_CHAT, async (username, recievers, setPreviousMessages) => {
-      if (!Array.isArray(recievers)) {
+    socket.on(CREATE_CHAT, async (username, receivers, setPreviousMessages) => {
+      if (!Array.isArray(receivers)) {
         const users = await User.find({//Fteching All the users that are part of chat
-          $or: [{ username: username }, { username: recievers }]
+          $or: [{ username: username }, { username: receivers }]
         });
        
         let currentUser = users.filter(user => (user.username == username));
         currentUser = currentUser[0];//Getting Current User who creates the chat
         
         const usersIdArray = users.map(user => user._id);//Creating User id array
-        const usernamesArray = [username,recievers];//Creating Usernames array
+        const usernamesArray = [username,receivers];//Creating Usernames array
       
-        let chat = await allChats.findOne({ users: usersIdArray });//findig if the chatroom is already exist
+        let chat = await allChats.findOne({ users: usersIdArray });//finding if the chatroom is already exist
         let newChat = {};
+
+       
+        
         
         if (!chat) {//if chatroom is not already exist then we creating a new chatroom
         
@@ -62,15 +80,40 @@ const SocketManager = (socket)=>{
           newChat = {
             chatId: chat.id,
             chatName: "personal",
-            messages: await getAllPreviousMessages(chat.messages),
+            messages: await getAllPreviousMessages(chat.messages,currentUser.id),
             users:usernamesArray
           };
         }catch(err){
           console.error(err)
         }
         }
+       
+        io.of(`/chatroom-${chat.id}`).on('connection',(chatRoomSocket)=>{
+          global.chatRoomSocket = chatRoomSocket
+          if(!chatRooms[chat.id]){
+            chatRooms[chat.id] = [currentUser.id]
+          }else{
+            if(!chatRooms[chat.id].includes(currentUser.id))
+            chatRooms[chat.id] = [currentUser.id,...chatRooms[chat.id]]
+          }
+          onlineUsers[socket.id] ? onlineUsers[socket.id].activeChat = chat.id : null
+          
+          chatRoomSocket.join(chat.id);
+
+          chatRoomSocket.on(CLOSE_CHAT_ROOM,(chatId,userId)=>{        
+            if(chatRooms[chatId]){
+              chatRooms[chatId] = chatRooms[chatId].filter((data)=>data !== userId) 
+             }
+              if(chatRooms[chatId] && (chatRooms[chatId].length === 0 || !chatRooms[chatId].length)){
+                delete chatRooms[chatId];
+              }
+            chatRoomSocket.disconnect()
+           
+          })
+          
         
-        setPreviousMessages(newChat)
+        })
+        setPreviousMessages(newChat);
       }
     });
   ////////////////////////////////////////////////////////////
@@ -83,15 +126,23 @@ const SocketManager = (socket)=>{
       sender = user._id;
 
       const senderName = user.username;
-      const reciever = chat.users.filter((id) =>String(id) !== String(sender))
-      let messageBody = await createMessage({message,sender})
+
+      const receiver = chat.users.filter((id) =>String(id) !== String(sender))
+      const onlineReceivers = getOnlineReceiversInRoom(chatId,sender)
+      let messageBody = await createMessage({message,sender,receiver,seenBy:onlineReceivers})
       let newMessage = await new Messages(messageBody)
       chat.messages.push(newMessage._id)
+      
+      newMessage = await newMessage.save();
       messageBody.sender = senderName
-      io.emit(`${MESSAGE_RECIEVED}-${reciever[0]}`,messageBody,chatId)
+      messageBody['_id'] = newMessage._id
+      io.emit(`${MESSAGE_RECIEVED}-${receiver[0]}`,messageBody,chatId)
       io.emit(`${MESSAGE_SENT}-${sender}`,messageBody,chatId)
-      await newMessage.save();
+      
+    
       await chat.save();
+    
+     
     })
 
     socket.on(IS_USER_CONNECTED,(userId)=>{
@@ -100,13 +151,13 @@ const SocketManager = (socket)=>{
       for(let key in onlineUsers){
         
        if(onlineUsers[key].userId === userId){
-     console.log(userId)
+
         io.emit(`${userId}-connected`)
        }
       }
     })
   ////////////////////////////////////////////////////////////
-    socket.on(SEND_TYPING,(sender,reciever,chatId)=>{
+    socket.on(SEND_TYPING,(sender,receiver,chatId)=>{
      
       socket.broadcast.emit(`${TYPING}-${chatId}`,sender)
     })
@@ -115,9 +166,18 @@ const SocketManager = (socket)=>{
 
   socket.on('disconnect', function () {
     io.emit('user disconnected');
+    if(onlineUsers[socket.id]){
+        const {activeChat,userId} = onlineUsers[socket.id];
+
+        if(chatRooms[activeChat]){
+          chatRooms[activeChat] = chatRooms[activeChat].filter((data)=>data !== userId) 
+        }
+        if(chatRooms[activeChat] && (chatRooms[activeChat].length === 0 || !chatRooms[activeChat].length)){
+          delete chatRooms[activeChat];
+        }
+    }
     onlineUsers[socket.id] ? io.emit(`${onlineUsers[socket.id].userId}-disconnected`) : null
     removeFromOnlineUsersList(socket.id)
-
   });
     
 // let files = {};
@@ -141,14 +201,21 @@ const SocketManager = (socket)=>{
   //////////////FACTORY FUNCTIONS/////////////////////////////////////////
 
 
-  const createMessage =async ({message="",sender="",time=getCurrentTime(),date=getCurrentDate()}={})=>(
+  const createMessage =async ({message="",sender="",receiver=[],time=getCurrentTime(),date=getCurrentDate(),seenBy=[]}={})=>(
     {
       message,
       sender,
+      receiver,
       time,
-      date
+      date,
+      seenBy
     }
   )
+  ///////////////////////////////////////////////////////////////////////////////
+  const getOnlineReceiversInRoom = (chatId,senderId) =>{
+  
+   return chatRooms[chatId] ? chatRooms[chatId].filter((userId)=>userId !== senderId) : []
+  }
   /////////////////////////////////////////////////////////////////////////////
   const getIdByUser =async username =>{
     user =await User.find({username:username})
@@ -161,8 +228,14 @@ const SocketManager = (socket)=>{
   }
   
   const getCurrentTime = () => {
-    const date = new Date();
-    return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+        const currentTime = new Date();
+        const currentOffset = currentTime.getTimezoneOffset();
+        const ISTOffset = 330;   // IST offset UTC +5:30 
+        const ISTTime = new Date(currentTime.getTime() + (ISTOffset + currentOffset)*60000);
+        // ISTTime now represents the time in IST coordinates
+        const hoursIST = ISTTime.getHours()
+        const minutesIST = ISTTime.getMinutes()
+    return `${hoursIST}:${minutesIST}`
   }
   
   
@@ -222,15 +295,24 @@ const SocketManager = (socket)=>{
 
   /////////////////////////////////////////////////////////////////////////////
   
-  const getAllPreviousMessages = async messagesIdArray => {
+  const getAllPreviousMessages = async (messagesIdArray,currentUser) => {
+   
     const messages = await Promise.all(messagesIdArray.map(async id => {
         let message = await Messages.findById(id)
         const sender = await getUserById(message.sender)
-        message = JSON.parse(JSON.stringify(message))//Converting Mongo Object into normal JS object
+      
+        if(message.seenBy && !message.seenBy.includes(currentUser) && JSON.parse(JSON.stringify(message.sender)) !== JSON.parse(JSON.stringify(currentUser)) ){
+           await Messages.updateOne({'_id':message.id},{'$set':{'seenBy':[currentUser,...message.seenBy]}})
+           message.seenBy = [currentUser,...message.seenBy]
+          
+
+          io.emit(`SEEN-${message._id}`,currentUser)
+        }
+       message = JSON.parse(JSON.stringify(message))    //Converting Mongo Object into normal JS object
         message.sender = sender
-        return message
-        }))
        
+        return message 
+        }))
     return messages;
   };
   /////////////////////////////////////////////////////////////////////////////
@@ -238,19 +320,17 @@ const SocketManager = (socket)=>{
   const uuid = require("uuid/v4");
   /////////////////////////////////////////////////////////////////////////////
   
-  const addUserToOnlineUsersList = ({username,socketId,userId}) => {
+  const addUserToOnlineUsersList = ({username,socketId,userId,activeChat=""}) => {
     if (!isUserAlreadyOnline(socketId)) {
-      onlineUsers[socketId] = {username,userId}
-    console.log("online user list")
-    console.log(onlineUsers)
+      onlineUsers[socketId] = {username,userId,activeChat}
+   
     }
   };
 
 
   const removeFromOnlineUsersList = socketId =>{
     delete  onlineUsers[socketId]
-    console.log("online user list")
-    console.log(onlineUsers)
+  
   }
   /////////////////////////////////////////////////////////////////////////////
   

@@ -2,17 +2,19 @@ import React,{Component} from 'react';
 import {Route} from 'react-router-dom';
 import {Link} from 'react-router-dom'
 import ChatList from '../components/chat/ChatList';
+import  SITE_URL from '../siteurl'
 import FindForkerList from '../components/FindForkersList';
 import UserProfile from '../components/UserProfile';
 import PersonalChatContainer from '../components/chat/PersonalChatContainer';
 import io from 'socket.io-client';
-import {USER_CONNECTED,MESSAGE_RECIEVED,MESSAGE_SENT,CREATE_CHAT} from '../events'
+import {USER_CONNECTED,MESSAGE_RECIEVED,MESSAGE_SENT,CREATE_CHAT,CLOSE_CHAT_ROOM} from '../events'
 
 class Dashboard  extends Component{
 
 
     state = {
         socket : null,
+        chatRoomSocket : null,
         user : null,
         chatHistory:[],
         activeChat:{},
@@ -24,17 +26,26 @@ class Dashboard  extends Component{
         
     }
 
-    resetChatMessages = (user,reciever) =>{
+    resetChatMessages = (user=null,userId=null,reciever=null) =>{
+        const {activeChat,chatRoomSocket} = this.state
+        if(chatRoomSocket){
+            console.log(activeChat.chatId,chatRoomSocket.id)
+            chatRoomSocket.emit(CLOSE_CHAT_ROOM,activeChat.chatId,userId)
+        }
         this.setState({
            activeChat:{},
-            currentChatMessages:[]
+            currentChatMessages:[],
+           
         },()=>{
+            if(user && reciever){
             this.state.socket.emit(CREATE_CHAT,user,reciever,this.setPreviousMessages);
+            }
         })
     }
     setUser = (user,chatHistory=[]) =>{ 
         this.setState({user,chatHistory})
         console.log(chatHistory)
+        
     }
     initSocket = () =>{
         const { data } = this.props;
@@ -70,8 +81,11 @@ class Dashboard  extends Component{
     }
 
     setPreviousMessages = (chat) =>{  
-      //console.log(chat)
-        this.setState({currentChatMessages:chat.messages},()=>{
+      console.log(chat)
+        this.setState({
+            currentChatMessages:chat.messages, 
+            chatRoomSocket : io.connect(`${SITE_URL}/chatroom-${chat.chatId}`)
+        },()=>{
        //     console.log(chat.messages)
         this.addChat({
                 chatId:chat.chatId,
@@ -93,14 +107,10 @@ class Dashboard  extends Component{
         this.setState({
             chatHistory:[chat,...oldChatHistory],
             activeChat:chat
-        },()=>{
-            console.log(this.state.chat) 
         });
         }else{
             this.setState({
                 activeChat:chat
-            },()=>{
-                console.log(this.state.chat) 
             });
         }
        
@@ -161,10 +171,12 @@ class Dashboard  extends Component{
               
 
                     <Route path="/dashboard/:user"  render={()=><PersonalChatContainer 
+
                                                                             resetChatMessages={this.resetChatMessages}
                                                                             setPreviousMessages={this.setPreviousMessages}
                                                                             messages={this.state.currentChatMessages}
                                                                             socket={this.state.socket}
+                                                                            chatRoomSocket={this.state.chatRoomSocket}
                                                                             user={this.props.data.user.login}
                                                                             userId={this.props.data.user.gitForkerUserId}
                                                                             reciever={this.props.match.params.user}

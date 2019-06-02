@@ -11,7 +11,9 @@ import LoginVerification from './components/HOC/loginVerification'
 import siteUrl from './siteurl';
 const client = new ApolloClient({
   link: new HttpLink({uri:`${siteUrl}/graphql`}),
-  cache: new InMemoryCache()
+  cache: new InMemoryCache({
+    dataIdFromObject: object => object.gitForkerUserId,
+  })
 
 });
 

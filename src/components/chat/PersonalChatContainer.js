@@ -5,7 +5,9 @@ import MessageInput from './MessageInput';
 import gql from 'graphql-tag';
 import {graphql,withApollo} from 'react-apollo';
 import Loader from '../Loader';
-import {CREATE_CHAT} from '../../events';
+import  SITE_URL from '../../siteurl'
+import {CLOSE_CHAT_ROOM} from '../../events';
+import io from 'socket.io-client';
 import UserNotRegistered from '../Errors/UserNotRegistered';
 
 const query = gql`
@@ -15,16 +17,25 @@ query Search($username:String!){
     avatar_url
     email
     isGitforkerUser
+    gitForkerUserId
   }
 }
 `;
 
 
  class PersonalChatContainer extends Component{
+    
+     
 
+    componentWillUnmount(){
+     
+        this.props.chatRoomSocket.emit(CLOSE_CHAT_ROOM,this.props.chat.chatId,this.props.userId)
+      
+    
+}
     render(){
-        console.log("4. render")
-        const { socket,user,userId,data,chat,messages,setPreviousMessages,timestamp } = this.props; 
+        
+        const { socket,user,userId,data,chat,messages,setPreviousMessages,chatRoomSocket } = this.props; 
     
         if(data.loading){
             return <Loader/>
@@ -39,9 +50,29 @@ query Search($username:String!){
         else{
         return(
             <div className="chat-container">
-               <ChatHeader socket={socket} chat={chat} chatName={data.search_one.login} image={data.search_one.avatar_url}/>
-                <MessageContainer sender={user} reciever={data.search_one.login} messages={messages} chat={chat} setPreviousMessages={setPreviousMessages} socket={socket}/>
-                <MessageInput socket={socket} chatId={chat.chatId} senderId={userId} sender={user} reciever={data.search_one.login} setPreviousMessages={setPreviousMessages} />
+               <ChatHeader 
+                    socket={socket} 
+                    chat={chat} 
+                    chatName={data.search_one.login} 
+                    image={data.search_one.avatar_url}
+                />
+                <MessageContainer 
+                    sender={user}
+                    senderId={userId} 
+                    reciever={data.search_one.login} 
+                    messages={messages} chat={chat} 
+                    setPreviousMessages={setPreviousMessages} 
+                    
+                    socket={socket}
+                />
+                <MessageInput 
+                    socket={socket} 
+                    chatId={chat.chatId} 
+                    senderId={userId} 
+                    sender={user} 
+                    reciever={data.search_one.login} 
+                    setPreviousMessages={setPreviousMessages} 
+                />
             </div>
         )
         }
@@ -51,7 +82,8 @@ query Search($username:String!){
 
 
 export default graphql(query,{
-    options:(props)=> {return { variables: {username : props.reciever},onCompleted:function(){
-        props.resetChatMessages(props.user,props.reciever);
+    options:(props)=> {return { variables: {username : props.reciever},fetchPolicy:'no-cache',onCompleted:function(){
+        props.resetChatMessages(props.user,props.userId,props.reciever);
+        
     }}}
  })(PersonalChatContainer);

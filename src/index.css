@@ -407,7 +407,10 @@ a {
     background: #fff; }
   .message-container__time {
     font-size: 1rem;
-    margin: 0 .5rem; }
+    margin: 0 1rem;
+    color: #191919; }
+    .message-container__time span {
+      margin: 0 0 0 1rem; }
 
 .message-input {
   height: 12vh;

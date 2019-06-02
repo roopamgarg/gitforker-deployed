@@ -12,6 +12,11 @@ const messagesSchema = new Schema({
         type: Schema.Types.ObjectId,
          ref: 'user'
     },
+    receiver:{
+        type: [Schema.Types.ObjectId],
+         ref: 'user',
+        default:[]
+    },
     time:{
         type:String,
         required:true
@@ -19,6 +24,12 @@ const messagesSchema = new Schema({
     date:{
         type:String,
         required:true
+    },
+    seenBy:{
+        type:[
+            {type: String, ref: 'user'}
+          ],
+          default:[]
     }
 });
 
