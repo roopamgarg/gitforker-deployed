@@ -7,7 +7,7 @@ class ChatList extends Component{
        return reciever[0];
     }
     render(){
-    const {chatHistory,user} = this.props;
+    const {chatHistory,user,userId,setLastMessage} = this.props;
 
         return(
             <div className="list ">
@@ -31,7 +31,8 @@ class ChatList extends Component{
                                     key={chat.chatId}
                                     chatName={this.getRecieverName(user,chat.users)} 
                                     socket={this.props.socket} 
-                                    lastMessage={(chat.lastMessage)?chat.lastMessage.message:""}
+                                    lastMessage={(chat.lastMessage)?chat.lastMessage:""}
+                                    userId={userId}
                                     />
                    })
                 

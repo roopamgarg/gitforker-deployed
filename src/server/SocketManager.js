@@ -19,7 +19,9 @@ const {
   SEND_TYPING,
   TYPING,
   IS_USER_CONNECTED,
-  CLOSE_CHAT_ROOM 
+  CLOSE_CHAT_ROOM,
+  NEW_MESSAGE,
+  SEEN
 } = require("../events");
 const io = require('./server.js').io
 
@@ -304,9 +306,9 @@ const SocketManager = (socket)=>{
         if(message.seenBy && !message.seenBy.includes(currentUser) && JSON.parse(JSON.stringify(message.sender)) !== JSON.parse(JSON.stringify(currentUser)) ){
            await Messages.updateOne({'_id':message.id},{'$set':{'seenBy':[currentUser,...message.seenBy]}})
            message.seenBy = [currentUser,...message.seenBy]
-          
-
-          io.emit(`SEEN-${message._id}`,currentUser)
+            console.log(`${NEW_MESSAGE}-${message._id}`);
+           global.socket.emit(`${NEW_MESSAGE}-${message._id}`,currentUser)
+          io.emit(`${SEEN}-${message._id}`,currentUser)
         }
        message = JSON.parse(JSON.stringify(message))    //Converting Mongo Object into normal JS object
         message.sender = sender

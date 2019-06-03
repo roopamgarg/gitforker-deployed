@@ -109,7 +109,16 @@ class Dashboard  extends Component{
             activeChat:chat
         });
         }else{
+            console.log("oldChat")
+            const previousChat = this.state.chatHistory.map((oldChat)=>{
+                if(oldChat.id === chat.id){
+                    oldChat.lastMessage = chat.lastMessage
+
+                }
+                return oldChat;
+            })
             this.setState({
+               chatHistory:previousChat,
                 activeChat:chat
             });
         }
@@ -156,6 +165,7 @@ class Dashboard  extends Component{
                            <Route path="/dashboard" component={()=><ChatList 
                                                                         chatHistory={this.state.chatHistory}
                                                                         user={this.props.data.user.login}
+                                                                        userId={this.props.data.user.gitForkerUserId}
                                                                         socket={this.state.socket}
                                                                        
                                                                         />}/>

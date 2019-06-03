@@ -522,6 +522,12 @@ a {
     margin: .5rem;
     border-radius: 50%;
     background: #00ff00; }
+  .user-card__unseen-message {
+    width: 1.2rem;
+    height: 1.2rem;
+    margin: .5rem;
+    border-radius: 50%;
+    background: #FB20DE; }
   .user-card__msg {
     width: 1.2rem;
     height: 1.2rem;
