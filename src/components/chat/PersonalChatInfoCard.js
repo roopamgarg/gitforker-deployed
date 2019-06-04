@@ -150,4 +150,4 @@ componentWillMount = ()=>{
 
 export default  graphql(query,{
     options:(props)=> {return { variables: {username : props.chatName}}}
- })(PersonalChatInfoCard);
+ })(PersonalChatInfoCard); 

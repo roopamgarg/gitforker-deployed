@@ -30,6 +30,7 @@
     "react-tilt": "^0.1.4",
     "socket.io": "^2.2.0",
     "socket.io-client": "^2.2.0",
+    "socket.io-stream": "^0.9.1",
     "socketio-file-upload": "^0.7.0",
     "uuid": "^3.3.2"
   },

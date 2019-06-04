@@ -24,7 +24,7 @@ export default class ChatHeader extends Component{
     }
 
     uploadImage = (file) =>{
-    
+    console.log(file)
         const {socket,chat} = this.props
         socket.emit("slice upload",socket)
 var uploader = new SocketIOFileUpload(socket);

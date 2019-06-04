@@ -59,7 +59,7 @@ class Dashboard  extends Component{
                 const {sender} = newMessage;
                 const {users} =  this.state.activeChat;
                 this.setLastMessage(chatId,newMessage)
-                if(users.includes(sender)){
+                if(users && users.includes(sender)){
                 this.setState({
                     currentChatMessages:[...oldMessages,newMessage]
                 })
@@ -102,7 +102,7 @@ class Dashboard  extends Component{
     addChat = (chat) =>{
       console.log(chat)
         const oldChatHistory = this.state.chatHistory;
-        const isPreviousChat = oldChatHistory.filter(({id})=>(chat.id === id))
+        const isPreviousChat = oldChatHistory.filter(({chatId})=>(chat.chatId === chatId))
         if(isPreviousChat.length < 1){//if chat is not present already
         this.setState({
             chatHistory:[chat,...oldChatHistory],
@@ -111,7 +111,7 @@ class Dashboard  extends Component{
         }else{
             console.log("oldChat")
             const previousChat = this.state.chatHistory.map((oldChat)=>{
-                if(oldChat.id === chat.id){
+                if(oldChat.chatId === chat.chatId){
                     oldChat.lastMessage = chat.lastMessage
 
                 }
