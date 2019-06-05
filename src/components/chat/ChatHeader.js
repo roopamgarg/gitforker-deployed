@@ -69,7 +69,7 @@ blobStream.pipe(stream);
                     </div>
                     <div className="chat-header__options">
                     
-                    <input type="file" id="file-input" style={{display:"none"}} onChange={this.uploadImage}/>
+                    <input type="file" id="file-input" style={{display:"none"}} accept="image/*" onChange={this.uploadImage}/>
                         <label for="file-input">
                             <i class="fas fa-paperclip"></i> 
                         </label>

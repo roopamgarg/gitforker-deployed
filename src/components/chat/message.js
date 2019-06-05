@@ -37,7 +37,7 @@ class Message extends Component{
     }
     render(){
         const {message,sender,senderId} = this.props;
-     
+     console.log(message)
         return (<div className={`${(message.sender===sender)?"right":""} message-container__message-box`}>
         <div className="message-container__message-content">
             <div className="message-container__message">
@@ -47,7 +47,7 @@ class Message extends Component{
                 className="markdown-body"
                 source={message.message}
                 skipHtml={true}
-                />:<img src={message.image} alt="image"/>
+                />:<img width="100%" height="100%" src={message.image} alt="image"/>
                 }
             </div>
             

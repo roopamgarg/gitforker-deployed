@@ -5,6 +5,7 @@ let chatRooms = {};
 global.chatRoomSocket = null;
 global.socket = null;
 
+const { SITE_URL } = require("./config/keys");
 
 const siofu = require("socketio-file-upload");
 var ss = require('socket.io-stream');
@@ -173,7 +174,7 @@ const SocketManager = (socket)=>{
         console.log("image called")
         filename = uuidv1()+filename
         stream.pipe(fs.createWriteStream(`src/server/uploads/${filename}`));
-         messageBody = await createMessage({message_type,filename,message,sender,receiver,seenBy:onlineReceivers})
+         messageBody = await createMessage({message_type,message,image:`/uploads/${filename}`,sender,receiver,seenBy:onlineReceivers})
       }
       let newMessage = await new Messages(messageBody)
       chat.messages.push(newMessage._id)

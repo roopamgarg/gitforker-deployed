@@ -72,6 +72,8 @@ require("./routes/invite")(app);
 
 
 app.use(express.static("build"));
+app.use(express.static('uploads'))
+app.use('/uploads', express.static(__dirname + '/uploads'));
 
 app.get("/*", (req, res) => {
   res.sendFile(path.resolve(__dirname, "..", "..", "build", "index.html"));
