@@ -173,7 +173,7 @@ const SocketManager = (socket)=>{
     if(message_type === "image"){
         console.log("image called")
         filename = uuidv1()+filename
-        stream.pipe(fs.createWriteStream(`uploads/${filename}`));
+        stream.pipe(fs.createWriteStream(`src/server/uploads/${filename}`));
          messageBody = await createMessage({message_type,message,image:`/uploads/${filename}`,sender,receiver,seenBy:onlineReceivers})
       }
       let newMessage = await new Messages(messageBody)
