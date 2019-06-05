@@ -40,11 +40,16 @@ class Message extends Component{
      
         return (<div className={`${(message.sender===sender)?"right":""} message-container__message-box`}>
         <div className="message-container__message-content">
-            <div className="message-container__message"> <ReactMarkdown
-            className="markdown-body"
-             source={message.message}
-             skipHtml={true}
-             /> </div>
+            <div className="message-container__message">
+                {
+                ((message.message_type && message.message_type === "text") || !message.message_type)?
+                <ReactMarkdown
+                className="markdown-body"
+                source={message.message}
+                skipHtml={true}
+                />:<img src={message.image} alt="image"/>
+                }
+            </div>
             
         </div> 
         {/* <p className="message-container__time"></p>  */}

@@ -83,7 +83,7 @@ componentWillMount = ()=>{
        
         socket.emit(IS_USER_CONNECTED,data.search_one.gitForkerUserId)
 
-        if(!seenBy.includes(data.search_one.gitForkerUserId)){
+        if(seenBy && !seenBy.includes(data.search_one.gitForkerUserId)){
             console.log(`${NEW_MESSAGE}-${lastMessage._id}`)
             console.log(lastMessage)
             socket.on(`${NEW_MESSAGE}-${lastMessage._id}`,(receiverId)=>{
@@ -101,11 +101,11 @@ componentWillMount = ()=>{
     }
 }
     isLastMessageSeened = () =>{
-        const { lastMessage,userId,socket } = this.props;
+        const { userId } = this.props;
         const { seenBy } = this.state;
        
        
-        return seenBy.includes(userId)
+        return (seenBy)?seenBy.includes(userId):null
     }
     render(){
         const { data,lastMessage,chatName,userId } = this.props;  

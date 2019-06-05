@@ -29,7 +29,9 @@ query Search($username:String!){
 
     componentWillUnmount(){
      
-        this.props.chatRoomSocket.emit(CLOSE_CHAT_ROOM,this.props.chat.chatId,this.props.userId)
+        if(this.props.chatRoomSocket)
+            this.props.chatRoomSocket.emit(CLOSE_CHAT_ROOM,this.props.chat.chatId,this.props.userId)
+        
       
     
 }
@@ -53,6 +55,7 @@ query Search($username:String!){
                <ChatHeader 
                     socket={socket} 
                     chat={chat} 
+                    senderId={userId} 
                     chatName={data.search_one.login} 
                     image={data.search_one.avatar_url}
                 />

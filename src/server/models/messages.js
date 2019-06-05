@@ -3,9 +3,17 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const messagesSchema = new Schema({
-    message:{
+    message_type:{
         type:String,
         required:true
+    },
+    message:{
+        type:String,
+        default:null
+    },
+    image:{
+        type:String,
+        default:null
     },
     sender:{
         required:true,

@@ -1,4 +1,5 @@
 const fs = require('fs');
+var path = require('path');
 let onlineUsers = {};
 let chatRooms = {};
 global.chatRoomSocket = null;
@@ -6,7 +7,9 @@ global.socket = null;
 
 
 const siofu = require("socketio-file-upload");
+var ss = require('socket.io-stream');
 const mongoose = require("mongoose");
+const uuidv1 = require('uuid/v1');
 const models = require("./models");
 const allChats = mongoose.model("allChats");
 const User = mongoose.model("user");
@@ -118,9 +121,40 @@ const SocketManager = (socket)=>{
         setPreviousMessages(newChat);
       }
     });
-  ////////////////////////////////////////////////////////////
-    socket.on(MESSAGE_SENT,async (chatId,senderId,message)=>{
+      ////////////////////////////////////////////////////////////
+      socket.on(MESSAGE_SENT,async (chatId,senderId,message,message_type="text")=>{
+      
+        const chat =await allChats.findById(chatId)
+  
+        const user =await User.findById(senderId)
      
+        sender = user._id;
+  
+        const senderName = user.username;
+  
+        const receiver = chat.users.filter((id) =>String(id) !== String(sender))
+        const onlineReceivers = getOnlineReceiversInRoom(chatId,sender)
+        let messageBody;
+        if(message_type === "text"){
+           messageBody = await createMessage({message,sender,receiver,seenBy:onlineReceivers})
+        }
+        let newMessage = await new Messages(messageBody)
+        chat.messages.push(newMessage._id)
+        
+        newMessage = await newMessage.save();
+        messageBody.sender = senderName
+        messageBody['_id'] = newMessage._id
+        io.emit(`${MESSAGE_RECIEVED}-${receiver[0]}`,messageBody,chatId)
+        io.emit(`${MESSAGE_SENT}-${sender}`,messageBody,chatId)
+        
+      
+        await chat.save();
+      
+       
+      })
+  ////////////////////////////////////////////////////////////
+    ss(socket).on('image-upload',async (chatId,senderId,message,message_type="image",filename=null,stream=null)=>{
+      console.log(chatId,senderId,message,message_type,filename)
       const chat =await allChats.findById(chatId)
 
       const user =await User.findById(senderId)
@@ -131,7 +165,13 @@ const SocketManager = (socket)=>{
 
       const receiver = chat.users.filter((id) =>String(id) !== String(sender))
       const onlineReceivers = getOnlineReceiversInRoom(chatId,sender)
-      let messageBody = await createMessage({message,sender,receiver,seenBy:onlineReceivers})
+      let messageBody;
+    if(message_type === "image"){
+        console.log("image called")
+        filename = uuidv1()+filename
+        stream.pipe(fs.createWriteStream(`src/server/uploads/${filename}`));
+         messageBody = await createMessage({message_type,filename,message,sender,receiver,seenBy:onlineReceivers})
+      }
       let newMessage = await new Messages(messageBody)
       chat.messages.push(newMessage._id)
       
@@ -181,18 +221,24 @@ const SocketManager = (socket)=>{
     onlineUsers[socket.id] ? io.emit(`${onlineUsers[socket.id].userId}-disconnected`) : null
     removeFromOnlineUsersList(socket.id)
   });
+  ////////////////////////////////////////////////
+  // ss(socket).on('image-upload', (stream,chatId,senderId,filename,message="") => {
+  //   //  filename = uuidv1()+filename
+  //   // //sentImage(chatId,senderId,message,"image",image=filename)
+  //   // io.emit(MESSAGE_SENT,chatId,senderId,message,"image",filename)
+
+  //   // stream.pipe(fs.createWriteStream(`src/server/uploads/${filename}`));
+  // });
     
 // let files = {};
 // let struct = { 
 //         name: null, 
-//         type: null, 
+//         message_type: null, 
 //         size: 0, 
 //         data: [], 
 //         slice: 0, 
 //     };
-
 //     socket.on('slice upload',function(socket){
-      
 //       var uploader = new siofu();
 //       uploader.dir = "/path/to/save/uploads";
 //       uploader.listen(socket);
@@ -202,9 +248,16 @@ const SocketManager = (socket)=>{
 
   //////////////FACTORY FUNCTIONS/////////////////////////////////////////
 
+  const  sentImage= (chatId,senderId,message,image) =>{
+   // global.socket.emit(MESSAGE_SENT,chatId,senderId,message,"image",image)
+  }
 
-  const createMessage =async ({message="",sender="",receiver=[],time=getCurrentTime(),date=getCurrentDate(),seenBy=[]}={})=>(
-    {
+  const createMessage =async ({message_type="text",message="",image=null,sender="",receiver=[],time=getCurrentTime(),date=getCurrentDate(),seenBy=[]}={})=>{
+   
+  
+     return {
+      message_type,
+      image,
       message,
       sender,
       receiver,
@@ -212,7 +265,8 @@ const SocketManager = (socket)=>{
       date,
       seenBy
     }
-  )
+  }
+  
   ///////////////////////////////////////////////////////////////////////////////
   const getOnlineReceiversInRoom = (chatId,senderId) =>{
   

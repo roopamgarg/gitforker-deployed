@@ -89,7 +89,8 @@ body {
   box-sizing: border-box;
   padding: 0rem;
   overflow-x: hidden;
-  width: 100vw; }
+  width: 100vw;
+  font-family: "open sans"; }
 
 a {
   text-decoration: none; }
@@ -249,7 +250,7 @@ a {
         padding: 0 2rem 0 0; } }
   .index-page__header {
     text-align: right;
-    font-family: "Georgia";
+    font-family: "open sans";
     margin: 1rem 0;
     font-size: 3.5rem;
     letter-spacing: .2rem;
@@ -265,7 +266,7 @@ a {
     padding: 1.6rem;
     width: 25vw;
     margin: 2rem 0;
-    font-family: "Georgia";
+    font-family: "open sans";
     border: none;
     background: linear-gradient(#FB20DE, #4C44BA);
     color: #f7f7f7;
@@ -473,7 +474,7 @@ a {
     padding: 1.6rem;
     width: 25vw;
     margin: 2rem 0;
-    font-family: "Georgia";
+    font-family: "open sans";
     border: none;
     background: linear-gradient(#FB20DE, #4C44BA);
     color: #f7f7f7;

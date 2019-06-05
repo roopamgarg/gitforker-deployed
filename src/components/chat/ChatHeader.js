@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { TYPING } from '../../events';
+import { TYPING,MESSAGE_SENT } from '../../events';
+const ss = require('socket.io-stream');
 const SocketIOFileUpload = require('socketio-file-upload');
 
 export default class ChatHeader extends Component{
@@ -23,12 +24,29 @@ export default class ChatHeader extends Component{
           }
     }
 
-    uploadImage = (file) =>{
-    console.log(file)
-        const {socket,chat} = this.props
-        socket.emit("slice upload",socket)
-var uploader = new SocketIOFileUpload(socket);
-uploader.listenOnInput(document.getElementById("file-input"));
+    uploadImage = (e) =>{
+//     console.log(file)
+//         const {socket,chat} = this.props
+//         socket.emit("slice upload",socket)
+// var uploader = new SocketIOFileUpload(socket);
+// uploader.listenOnInput(document.getElementById("file-input"));
+var file = e.target.files[0];
+var stream = ss.createStream();
+const {socket,chat,senderId} = this.props
+// upload a file to the server.
+console.log(chat)
+
+ss(socket).emit('image-upload', chat.chatId,senderId,"","image",file.name,stream );
+const blobStream = ss.createBlobReadStream(file);
+let size = 0;
+ 
+blobStream.on('data', function(chunk) {
+  size += chunk.length;
+  console.log(Math.floor(size / file.size * 100) + '%');
+  // -> e.g. '42%'
+});
+ 
+blobStream.pipe(stream);
     } 
      render() {
     const { typingUsers } = this.state
@@ -51,7 +69,7 @@ uploader.listenOnInput(document.getElementById("file-input"));
                     </div>
                     <div className="chat-header__options">
                     
-                    <input type="file" id="file-input" style={{display:"none"}} onChange={(e)=>this.uploadImage(e.target.files[0])}/>
+                    <input type="file" id="file-input" style={{display:"none"}} onChange={this.uploadImage}/>
                         <label for="file-input">
                             <i class="fas fa-paperclip"></i> 
                         </label>
