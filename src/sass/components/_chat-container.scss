@@ -41,7 +41,7 @@
 .message-container{
     height: 76vh;
     background: rgba($color-light-pink,.1);
-    padding: 1rem;
+    padding: 5rem;
     text-align: left;
    
     overflow-y:scroll;
@@ -84,12 +84,13 @@
         width: auto;
         height: auto;
         max-width: 30vw; 
-        
-        padding: 1rem; 
+        max-height: 70vh;
+        border: 1rem solid $white; 
         color: white;
         border-radius: .5rem;
         font-size: 1.6rem;
         animation: fadeIn .5s;  
+        overflow: hidden;
     }
     &__message--img{
         max-height: 100%;

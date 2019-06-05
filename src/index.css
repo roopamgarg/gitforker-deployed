@@ -377,7 +377,7 @@ a {
 .message-container {
   height: 76vh;
   background: rgba(227, 140, 255, 0.1);
-  padding: 1rem;
+  padding: 5rem;
   text-align: left;
   overflow-y: scroll; }
   .message-container .markdown-body {
@@ -392,11 +392,13 @@ a {
     width: auto;
     height: auto;
     max-width: 30vw;
-    padding: 1rem;
+    max-height: 70vh;
+    border: 1rem solid #fff;
     color: white;
     border-radius: .5rem;
     font-size: 1.6rem;
-    animation: fadeIn .5s; }
+    animation: fadeIn .5s;
+    overflow: hidden; }
   .message-container__message--img {
     max-height: 100%; }
   .message-container__message-box {
