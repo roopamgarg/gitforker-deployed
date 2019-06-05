@@ -43,6 +43,9 @@ const SocketManager = (socket)=>{
   ////////////////////////////////////////////////////////////
   
     socket.on(CREATE_CHAT, async (username, receivers, setPreviousMessages) => {
+      if(!username && !receivers){
+        return
+      }
       if (!Array.isArray(receivers)) {
         const users = await User.find({//Fteching All the users that are part of chat
           $or: [{ username: username }, { username: receivers }]
