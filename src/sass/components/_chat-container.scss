@@ -51,7 +51,8 @@
 		max-width: 980px;
 		margin: 0 auto;
 		
-	}
+    }
+    
     // code {
     //     display: block;
     //     overflow-x: auto;
@@ -80,12 +81,18 @@
         background: $white; 
         width: fit-content;
         margin:1rem 0;
-        max-width: 50vw; 
+        width: auto;
+        height: auto;
+        max-width: 30vw; 
+        
         padding: 1rem; 
         color: white;
         border-radius: .5rem;
         font-size: 1.6rem;
         animation: fadeIn .5s;  
+    }
+    &__message--img{
+        max-height: 100%;
     }
     &__message-box{
         display: flex;

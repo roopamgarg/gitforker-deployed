@@ -47,7 +47,7 @@ class Message extends Component{
                 className="markdown-body"
                 source={message.message}
                 skipHtml={true}
-                />:<img width="100%" height="100%" src={message.image} alt="image"/>
+                />:<img class="message-container__message--img" width="100%" src={message.image} alt="image"/>
                 }
             </div>
             
