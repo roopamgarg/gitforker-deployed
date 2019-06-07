@@ -140,7 +140,7 @@ const SocketManager = (socket)=>{
         const onlineReceivers = getOnlineReceiversInRoom(chatId,sender)
         let messageBody;
         if(message_type === "text"){
-           messageBody = await createMessage({message,sender,receiver,seenBy:onlineReceivers})
+           messageBody = createMessage({message,sender,receiver,seenBy:onlineReceivers})
         }
         let newMessage = await new Messages(messageBody)
         chat.messages.push(newMessage._id)
@@ -173,20 +173,23 @@ const SocketManager = (socket)=>{
     if(message_type === "image"){
         console.log("image called")
         filename = uuidv1()+filename
-        stream.pipe(fs.createWriteStream(`src/server/uploads/${filename}`));
-         messageBody = await createMessage({message_type,message,image:`/uploads/${filename}`,sender,receiver,seenBy:onlineReceivers})
+         stream.pipe(fs.createWriteStream(`src/server/uploads/${filename}`));
+         stream.on('end',async ()=>{
+          messageBody = createMessage({message_type,message,image:`/uploads/${filename}`,sender,receiver,seenBy:onlineReceivers})
+          let newMessage = await new Messages(messageBody)
+          chat.messages.push(newMessage._id)
+          
+          newMessage = await newMessage.save();
+          messageBody.sender = senderName;
+          messageBody['_id'] = newMessage._id;
+          io.emit(`${MESSAGE_RECIEVED}-${receiver[0]}`,messageBody,chatId);
+          io.emit(`${MESSAGE_SENT}-${sender}`,messageBody,chatId);
+          
+          
+          await chat.save();
+         })
       }
-      let newMessage = await new Messages(messageBody)
-      chat.messages.push(newMessage._id)
-      
-      newMessage = await newMessage.save();
-      messageBody.sender = senderName
-      messageBody['_id'] = newMessage._id
-      io.emit(`${MESSAGE_RECIEVED}-${receiver[0]}`,messageBody,chatId)
-      io.emit(`${MESSAGE_SENT}-${sender}`,messageBody,chatId)
-      
-    
-      await chat.save();
+     
     
      
     })
@@ -256,7 +259,7 @@ const SocketManager = (socket)=>{
    // global.socket.emit(MESSAGE_SENT,chatId,senderId,message,"image",image)
   }
 
-  const createMessage =async ({message_type="text",message="",image=null,sender="",receiver=[],time=getCurrentTime(),date=getCurrentDate(),seenBy=[]}={})=>{
+  const createMessage = ({message_type="text",message="",image=null,sender="",receiver=[],time=getCurrentTime(),date=getCurrentDate(),seenBy=[]}={})=>{
    
   
      return {

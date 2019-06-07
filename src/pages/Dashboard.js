@@ -55,6 +55,7 @@ class Dashboard  extends Component{
             socket.emit(USER_CONNECTED,data.user.login,this.setUser)
            
             socket.on(`${MESSAGE_RECIEVED}-${data.user.gitForkerUserId}`,(newMessage,chatId)=>{
+                console.log("called")
                 const oldMessages = this.state.currentChatMessages;
                 const {sender} = newMessage;
                 const {users} =  this.state.activeChat;
@@ -67,6 +68,7 @@ class Dashboard  extends Component{
              
             })
             socket.on(`${MESSAGE_SENT}-${data.user.gitForkerUserId}`,(newMessage,chatId)=>{
+                console.log("called")
                 const oldMessages = this.state.currentChatMessages;  
                 this.setLastMessage(chatId,newMessage)
                 this.setState({
