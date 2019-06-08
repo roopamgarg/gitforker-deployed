@@ -5,7 +5,7 @@ export default class EmojiComponent extends Component {
  
     render() {
         return (
-            <EmojiPicker onEmojiClick={myCallback}/>
+            <EmojiPicker onEmojiClick={myCallback}/> 
         );
     }
 }

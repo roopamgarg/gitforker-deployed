@@ -51,7 +51,7 @@ blobStream.pipe(stream);
      render() {
     const { typingUsers } = this.state
     const {chatName,image} = this.props
-        return(
+        return(    
             <div class="chat-header">
                     <div className="user-card__image ">
                         <img  src={image} alt="gitforker dp"/>    

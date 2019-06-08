@@ -5,6 +5,7 @@
     margin: 0rem;
     box-shadow: .5rem 1rem 2rem rgba($color-black,.2);
     transition: all .2s;
+    animation: fadeIn .5s;  
     &:hover{
         //transform: scaleY(1.1);
         padding: 2.6rem 0;

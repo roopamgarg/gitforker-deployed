@@ -68,14 +68,14 @@ class FindForkerList extends Component{
         return(
         
             <div className="list ">
-                <h2 className="dashboard__header">FIND FORKERS</h2>
+                {/* <h2 className="dashboard__header">FIND FORKERS</h2> */}
 
                 <input className="list__search" 
                         value={this.state.forker_search} 
                         onInput={ _.debounce(this.findForkers, 250, {
                             'maxWait': 1000
                         }, false)} 
-                        onChange={this.inputChangeHandler} placeholder="Search..." type="text"
+                        onChange={this.inputChangeHandler} placeholder="Search Forker" type="text"
                         />
                
                 <ul className="list__content">

@@ -7,7 +7,7 @@ import FindForkerList from '../components/FindForkersList';
 import UserProfile from '../components/UserProfile';
 import PersonalChatContainer from '../components/chat/PersonalChatContainer';
 import io from 'socket.io-client';
-import {USER_CONNECTED,MESSAGE_RECIEVED,MESSAGE_SENT,CREATE_CHAT,CLOSE_CHAT_ROOM} from '../events'
+import {USER_CONNECTED,MESSAGE_RECIEVED,MESSAGE_SENT,CREATE_CHAT,CLOSE_CHAT_ROOM,SET_OLD_MESSAGES,GET_OLD_MESSAGES} from '../events'
 
 class Dashboard  extends Component{
 
@@ -76,6 +76,14 @@ class Dashboard  extends Component{
                 })
               
             })
+            socket.on(SET_OLD_MESSAGES,(oldMessages)=>{
+                const prevMessages = this.state.currentChatMessages;  
+               
+                this.setState({
+                    currentChatMessages:[...oldMessages,...prevMessages]
+                })
+            })
+
         })
   
         this.setState({socket})
@@ -150,17 +158,17 @@ class Dashboard  extends Component{
     render(){
         return(
             <div className="dashboard u-display-flex">
-                <div className="dashboard__left u-display-flex">
-                       <div className="dashboard__sidenav">
+                <div className="dashboard__left ">
+                       <div className="dashboard__sidenav u-display-flex u-justify-content-space-between u-align-items-center">
                             <div>
-                                <img className="profile-pic--lg" src={this.props.data.user.avatar_url} alt="gitforker dp"/>
+                                <img className="profile-pic--sm" src={this.props.data.user.avatar_url} alt="gitforker dp"/>
                             </div>
-                            <ul>
-                            <Link to="/dashboard"><li>Chat</li></Link>
-                            <Link to="/find_forker"><li>Find Forkers</li></Link>
-                            <Link to="/find_forker">  <li>Settings</li></Link>
+                           <div className="u-display-flex">
+                            <Link to="/dashboard"><p><i class="fas fa-comments"></i></p></Link>
+                            <Link to="/find_forker"><p><i class="fas fa-users"></i></p></Link>
+                            {/* <Link to="/find_forker">  <p>Settings</p></Link> */}
+                            </div>
                             
-                            </ul>
                        </div>
         
                        <div className="dashboard__list">

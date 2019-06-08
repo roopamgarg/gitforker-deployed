@@ -63,7 +63,8 @@ query Search($username:String!){
                     sender={user}
                     senderId={userId} 
                     reciever={data.search_one.login} 
-                    messages={messages} chat={chat} 
+                    messages={messages} 
+                    chat={chat} 
                     setPreviousMessages={setPreviousMessages} 
                     
                     socket={socket}

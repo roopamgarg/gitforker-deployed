@@ -11,8 +11,8 @@ class ChatList extends Component{
 
         return(
             <div className="list ">
-                <h2 className="dashboard__header">CHAT</h2>
-                <input className="list__search" placeholder="Search..." type="text"/>
+                {/* <h2 className="dashboard__header">CHAT</h2> */}
+                <input className="list__search" placeholder="Search Chat" type="text"/>
                 {
                     (chatHistory.length === 0)?
                     <div className="empty">

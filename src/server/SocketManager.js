@@ -25,7 +25,9 @@ const {
   IS_USER_CONNECTED,
   CLOSE_CHAT_ROOM,
   NEW_MESSAGE,
-  SEEN
+  SEEN,
+  SET_OLD_MESSAGES,
+  GET_OLD_MESSAGES
 } = require("../events");
 const io = require('./server.js').io
 
@@ -89,7 +91,7 @@ const SocketManager = (socket)=>{
           newChat = {
             chatId: chat.id,
             chatName: "personal",
-            messages: await getAllPreviousMessages(chat.messages,currentUser.id),
+            messages: await getAllPreviousMessages(chat.messages.slice(chat.messages.length-11,chat.messages.length),currentUser.id),
             users:usernamesArray
           };
         }catch(err){
@@ -125,6 +127,13 @@ const SocketManager = (socket)=>{
         setPreviousMessages(newChat);
       }
     });
+    socket.on(GET_OLD_MESSAGES,async (pageNo,chatId,currentUserId)=>{
+      const chat = await allChats.findById(chatId);
+      if(chat){
+      const oldMessages = await getAllPreviousMessages(chat.messages.slice(chat.messages.length-(pageNo*10)-11,chat.messages.length-(pageNo*10)),currentUserId )
+      socket.emit(SET_OLD_MESSAGES,oldMessages)
+      }
+    })
       ////////////////////////////////////////////////////////////
       socket.on(MESSAGE_SENT,async (chatId,senderId,message,message_type="text")=>{
       

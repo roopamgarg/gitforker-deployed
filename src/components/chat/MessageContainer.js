@@ -1,12 +1,14 @@
 import React,{Component} from 'react'
-import Message from './message'
+import Message from './message';
+import {GET_OLD_MESSAGES} from '../../events';
 
 export default class MessageContainer extends Component{
     constructor(props){
         super(props)
         this.state = {
             maxheight : 0,
-            typingUsers : []
+            typingUsers : [],
+            pageNo:0
         }
     }
     
@@ -18,12 +20,27 @@ export default class MessageContainer extends Component{
       }
     
       componentDidUpdate(prevProps) {
-        console.log(this.props.messages)
-      
-        if( this.el.scrollTop !== this.state.maxheight && this.props.messages.length !== prevProps.messages.length){
+          console.log("----------------")
+        const {chat,senderId,socket,messages} = this.props;
+        console.log(this.el.scrollTop,messages.length)
+        console.log(this.el.scrollHeight,this.state.maxheight)
+       //this.el.scrollTop !== this.state.maxheight &&
+       if(messages.length - prevProps.messages.length > 1 && messages.length > 11){
+        this.el.scrollTop = this.state.maxheight
+       }
+        if( (messages.length - prevProps.messages.length === 1 ||( messages.length <= 11 && messages.length > 0 && prevProps.messages.length ===0))){
+          console.log("ytytytttyty")
             this.el.scrollTop = this.el.scrollHeight
         }
- 
+        if(this.el.scrollTop === 0 && messages.length > this.state.pageNo*10){
+            const pageNo = this.state.pageNo + 1
+            this.setState({
+                pageNo
+            },()=>{
+                socket.emit(GET_OLD_MESSAGES,pageNo,chat.chatId,senderId)
+            })
+            
+        }
     }
     
     render(){
