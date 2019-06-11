@@ -5,7 +5,8 @@ const SocketIOFileUpload = require('socketio-file-upload');
 
 export default class ChatHeader extends Component{
     state = {
-        typingUsers : []
+        typingUsers : [],
+        uploading:null
     }
     componentDidUpdate = () =>{
         setTimeout(()=>{  
@@ -25,28 +26,35 @@ export default class ChatHeader extends Component{
     }
 
     uploadImage = (e) =>{
-//     console.log(file)
-//         const {socket,chat} = this.props
-//         socket.emit("slice upload",socket)
-// var uploader = new SocketIOFileUpload(socket);
-// uploader.listenOnInput(document.getElementById("file-input"));
-var file = e.target.files[0];
-var stream = ss.createStream();
-const {socket,chat,senderId} = this.props
-// upload a file to the server.
-console.log(chat)
 
-ss(socket).emit('image-upload', chat.chatId,senderId,"","image",file.name,stream );
-const blobStream = ss.createBlobReadStream(file);
-let size = 0;
- 
-blobStream.on('data', function(chunk) {
-  size += chunk.length;
-  console.log(Math.floor(size / file.size * 100) + '%');
-  // -> e.g. '42%'
-});
- 
-blobStream.pipe(stream);
+        var file = e.target.files[0];
+        var stream = ss.createStream();
+        const {socket,chat,senderId} = this.props
+        // upload a file to the server.
+        console.log(chat)
+
+        ss(socket).emit('image-upload', chat.chatId,senderId,"","image",file.name,stream );
+        const blobStream = ss.createBlobReadStream(file);
+        let size = 0;
+        
+        blobStream.on('data', (chunk)=> {
+            size += chunk.length;
+            const uploaded = Math.floor(size / file.size * 100) + '%'
+           // console.log(Math.floor(size / file.size * 100) + '%');
+            if(uploaded === "100%"){
+                this.setState({
+                    uploading:null
+                })
+            }else{
+                this.setState({
+                    uploading:uploaded
+                })
+                // -> e.g. '42%'
+            }
+            
+        });
+        
+        blobStream.pipe(stream);
     } 
      render() {
     const { typingUsers } = this.state
@@ -71,7 +79,12 @@ blobStream.pipe(stream);
                     
                     <input type="file" id="file-input" style={{display:"none"}} accept="image/*" onChange={this.uploadImage}/>
                         <label for="file-input">
-                            <i class="fas fa-paperclip"></i> 
+                            {
+                                (this.state.uploading)?
+                                this.state.uploading:
+                                <i class="fas fa-paperclip"></i> 
+                            }
+                            
                         </label>
                     
                     {/* <i class="fas fa-paperclip"></i>                   

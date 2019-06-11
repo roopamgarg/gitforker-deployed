@@ -35,7 +35,7 @@
     "uuid": "^3.3.2"
   },
   "scripts": {
-    "start": "node src/server/server.js",
+    "start": "react-scripts start",
     "watch:sass": "node-sass src/sass/main.scss src/index.css -w",
     "server": "nodemon src/server/server.js",
     "build": "react-scripts build",
@@ -58,5 +58,7 @@
   },
   "watch": {
     "build": "src/"
-  }
+  },
+  "proxy":  "http://localhost:4000"
+  
 }
