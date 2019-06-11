@@ -58,7 +58,5 @@
   },
   "watch": {
     "build": "src/"
-  },
-  "proxy":  "https://gitforker.herokuapp.com"
-  
+  }
 }
