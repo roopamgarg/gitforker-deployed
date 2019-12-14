@@ -23,7 +23,7 @@ const schema = require("./schema/schema");
 const { MONGO_URI } = require("./config/keys");
 
 app.use(cors());
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.TEST_PORT || 8000;
 // Mongoose's built in promise library is deprecated, replace it with ES2015 Promise
 mongoose.Promise = global.Promise;
 
@@ -81,7 +81,7 @@ app.get("/*", (req, res) => {
 
 
 server.listen(PORT, () => {
-  console.log("Server is started!",process.env.NODE_ENV,process.env.PORT);
+  console.log("Server is started!",PORT);
 });
 
 
