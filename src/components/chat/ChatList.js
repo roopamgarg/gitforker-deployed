@@ -26,7 +26,9 @@ class ChatList extends Component{
                    chatHistory.map((chat,index)=>{
                     
                         console.log(chat)
-                    
+                        if(chat.users.length < 2){
+                            return null;
+                        }
                      return <PersonalChatInfoCard 
                                     key={chat.chatId}
                                     chatName={this.getRecieverName(user,chat.users)} 
